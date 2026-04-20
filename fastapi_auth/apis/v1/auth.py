@@ -1,5 +1,10 @@
 from fastapi import APIRouter
-from fastapi_auth.service.auth import CreateUser, AuthenticateUser, authenticate_google_user, get_client_ip
+from fastapi_auth.service.auth import (
+    CreateUser,
+    AuthenticateUser,
+    authenticate_google_user,
+    get_client_ip,
+)
 from fastapi_auth.schemas.auth import (
     UserSignup,
     UserLogin,
@@ -32,9 +37,6 @@ from django.http import HttpRequest
 router = APIRouter()
 
 
-
-    
-
 # TODO Check Token Validity
 class DummyRequest:
     def __init__(self, user):
@@ -52,9 +54,12 @@ async def Login(request: Request, response: Response, data: UserLogin):
         res = await verify_recaptcha(data.recaptcha_token)
         if not res:
             return {"response": "ReCaptcha Validation Failed"}
-    service = await sync_db_to_async(AuthenticateUser)(request, data, remember_me=data.remember_me)
+    service = await sync_db_to_async(AuthenticateUser)(
+        request, data, remember_me=data.remember_me
+    )
     from django.utils import timezone
     from datetime import timedelta
+
     print("----STARTING LOGIN----")
 
     if data.remember_me:
@@ -85,7 +90,7 @@ async def Login(request: Request, response: Response, data: UserLogin):
 async def google_login(request: Request, response: Response, data: GoogleLoginSchema):
     print("----STARTING GOOGLE LOGIN----")
     service = await authenticate_google_user(request, data.access_token)
-    
+
     from django.utils import timezone
     from datetime import timedelta
 
@@ -96,7 +101,7 @@ async def google_login(request: Request, response: Response, data: GoogleLoginSc
         settings.ACCESS_TOKEN_NAME,
         time=timezone.now() + timedelta(minutes=settings.ACCESS_TOKEN_LIFETIME),
     )
-    
+
     refresh_token = create_token_cookies(
         response,
         service[settings.REFRESH_TOKEN_NAME],
@@ -108,9 +113,6 @@ async def google_login(request: Request, response: Response, data: GoogleLoginSc
 
 
 import asyncio
-
-
-
 
 
 @router.post("/signup")
@@ -154,7 +156,7 @@ def forgot_password(data: ForgotPasswordSchema):
         form.save(
             request=request,
             use_https=False,
-            domain_override="192.168.9.36:3001",
+            domain_override="",
             email_template_name="account/email/password_reset_key.html",
         )
         return {"message": "Password reset email sent"}
@@ -162,9 +164,9 @@ def forgot_password(data: ForgotPasswordSchema):
         raise HTTPException(status_code=400, detail=form.errors)
 
 
-
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
+
 # from django.contrib.auth.models import User
 from rest_framework.test import APIRequestFactory
 from dj_rest_auth.views import PasswordResetView, PasswordResetConfirmView
@@ -197,7 +199,6 @@ from asgiref.sync import sync_to_async
 
 
 from django.contrib.auth.tokens import default_token_generator
-
 
 
 # @router.post("/reset-password")
@@ -269,20 +270,24 @@ async def reset_password(data: ResetPasswordSchema):
 @router.post("/resend-verification-code")
 async def resend_verification_code(data: ResendVerificationSchema):
     from fastapi_auth.service.auth import trigger_email_verification
+
     # from accounts.models import User
-    
+
     try:
         user = await sync_to_async(User.objects.get)(email=data.email)
     except User.DoesNotExist:
-         raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=404, detail="User not found")
 
     from allauth.account.models import EmailAddress
+
     try:
-        email_address = await sync_to_async(EmailAddress.objects.get)(user=user, email=data.email)
+        email_address = await sync_to_async(EmailAddress.objects.get)(
+            user=user, email=data.email
+        )
         if email_address.verified:
-             return {"message": "Email already verified"}
+            return {"message": "Email already verified"}
     except EmailAddress.DoesNotExist:
-        pass 
+        pass
 
     await trigger_email_verification(user)
     return {"message": "Verification email sent"}
@@ -337,12 +342,13 @@ def verify_email(key: str, fast_api_request: Request, response: Response):
     from datetime import timedelta
 
     access_token, refresh_token = create_tokens(user, remember_me=True)
-    
+
     token = UserToken.objects.create(
         user=user,
         ip_address=get_client_ip(fast_api_request),
         user_agent=fast_api_request.headers.get("user-agent", ""),
-        access_expires_at=timezone.now() + timedelta(minutes=settings.ACCESS_TOKEN_LIFETIME),
+        access_expires_at=timezone.now()
+        + timedelta(minutes=settings.ACCESS_TOKEN_LIFETIME),
         refresh_expires_at=timezone.now() + timedelta(days=7),
         access_token=access_token,
         refresh_token=refresh_token,
@@ -354,7 +360,7 @@ def verify_email(key: str, fast_api_request: Request, response: Response):
         settings.ACCESS_TOKEN_NAME,
         time=timezone.now() + timedelta(minutes=settings.ACCESS_TOKEN_LIFETIME),
     )
-    
+
     create_token_cookies(
         response,
         refresh_token,
