@@ -1,0 +1,113 @@
+{% extends "adminuser/_template.html" %}
+{% block content %}
+
+<div class="container-fluidd px-4">
+  
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+
+
+
+</head>
+<body>
+<section class="coupon-details">
+ <h5 class="page-title">Coupon Details</h5>
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label class="fw-bold">Coupon Name</label>
+        <p>{{ coupon.name }}</p>
+    </div>
+    <div class="col-md-6 mb-3">
+        <label class="fw-bold">Coupon Code</label>
+        <p>{{ coupon.code }}</p>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label class="fw-bold">Discount Type</label>
+        <p>{{ coupon.discount_type|title }}</p>
+    </div>
+    <div class="col-md-6 mb-3">
+        <label class="fw-bold">Discount Value</label>
+        <p>
+            {% if coupon.discount_type == 'percentage' %}
+                {{ coupon.discount_value|floatformat:0 }}%
+            {% else %}
+                ${{ coupon.discount_value|floatformat:2 }}
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label class="fw-bold">Max Discount Amount</label>
+        <p>{{ coupon.max_discount_amount|default:"-" }}</p>
+    </div>
+    <div class="col-md-6 mb-3">
+        <label class="fw-bold">Min Order Value</label>
+        <p>{{ coupon.min_order_value|default:"0" }}</p>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label class="fw-bold">Start Date</label>
+        <p>{{ coupon.start_date|slice:":16" }}</p>
+    </div>
+    <div class="col-md-6 mb-3">
+        <label class="fw-bold">End Date</label>
+        <p>{{ coupon.end_date|slice:":16" }}</p>
+    </div>
+
+    <div class="col-md-12 mb-3">
+        <label class="fw-bold">Description</label>
+        <p>{{ coupon.description|default:"-" }}</p>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <label class="fw-bold">Status</label>
+        <p>
+            <span class="badge {% if coupon.is_active or coupon.status == 'active' %}bg-success{% else %}bg-secondary{% endif %}">
+                {{ coupon.status|default:"active"|title }}
+            </span>
+        </p>
+    </div>
+    <div class="col-md-4 mb-3">
+        <label class="fw-bold">Usage Limit</label>
+        <p>{{ coupon.usage_limit|default:"Unlimited" }}</p>
+    </div>
+    <div class="col-md-4 mb-3">
+        <label class="fw-bold">Per User Limit</label>
+        <p>{{ coupon.per_user_limit|default:"Unlimited" }}</p>
+    </div>
+
+    <div class="col-md-12 mb-3">
+        <label class="fw-bold">Applicable Categories</label>
+        <p>
+            {% if coupon.applicable_categories %}
+                {% for cat in coupon.applicable_categories %}
+                    <span class="badge bg-info text-dark">{{ cat }}</span>
+                {% endfor %}
+            {% else %}
+                All Categories
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="col-md-12 mt-3">
+        <a href="{% url 'coupon_update' coupon.id %}" class="btn btn-primary">Edit Coupon</a>
+        <a href="{% url 'coupon_list_form' %}" class="btn btn-secondary">Back to List</a>
+    </div>
+</div>
+</section>
+</body>
+
+</div>
+
+
+
+
+
+{% endblock content %}

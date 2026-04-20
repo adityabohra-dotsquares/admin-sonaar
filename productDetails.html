@@ -1,0 +1,663 @@
+{% extends "adminuser/_template.html" %}
+{% load static %}
+{% load product_extras %}
+{% block title %}Product Details - {{ response.title }}{% endblock %}
+{% block content %}
+    {% include 'adminuser/productDetails.css.html' %}
+    <!-- Main content -->
+    <div class="container-fluidd p-4">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="page-title mt-4">Product Details</h5>
+                <div class="gap-2">
+                    <a href="https://shopperbeats.com.au/product/{{ response.unique_code }}" class="btn btn-primary me-2" target="_blank">Preview</a>
+                    <a href="{% url 'product_edit' response.id %}" class="red-btn">Edit Product</a>
+                </div>
+            </div>
+            <!-- Main Content -->
+            <div class="card addproduct-card shadow-sm border-0 rounded-3">
+                <div class="card-body p-4">
+                    <div class="row g-5">
+                        <div class="col-lg-4">
+                            <div class="text-center product-card">
+
+                    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                      <div class="carousel-inner">
+                       
+                        {% with image_urls=response.images|get_image_urls %}
+                            {% for img_url in image_urls %}
+                                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                    <div class="carousel-image-container">
+                                        <img src="{{ img_url }}"
+                                             alt="Product image"
+                                             class="img-fluid carousel-image"
+                                             width="500" height="480">
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endwith %}
+
+                        <!-- Variant Images & Videos in Carousel -->
+                        {% if response.variants %}
+                            {% for v in response.variants %}
+                                {% with vimages=v.images|get_image_urls %}
+                                    {% for img in vimages %}
+                                        <div class="carousel-item">
+                                            <div class="carousel-image-container">
+                                                <img src="{{ img }}"
+                                                     alt="Variant image"
+                                                     class="img-fluid carousel-image"
+                                                     width="500" height="480">
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                    {% if v.images|get_video_url %}
+                                        <div class="carousel-item">
+                                            <div class="carousel-image-container">
+                                                {% with video_url=v.images|get_video_url %}
+                                                    {% if video_url|is_youtube_url %}
+                                                        <iframe src="{{ video_url|get_youtube_embed_url }}"
+                                                                title="YouTube video player" frameborder="0"
+                                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                                allowfullscreen
+                                                                class="img-fluid carousel-image w-100 h-100 object-fit-contain">
+                                                        </iframe>
+                                                    {% else %}
+                                                        <video src="{{ video_url }}"
+                                                               autoplay muted loop playsinline
+                                                               class="img-fluid carousel-image"
+                                                               width="500" height="480">
+                                                        </video>
+                                                    {% endif %}
+                                                {% endwith %}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endwith %}
+                            {% endfor %}
+                        {% endif %}
+
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function() {
+                                const inner = document.querySelector('.carousel-inner');
+                                // Check if any item has active class
+                                if (!inner.querySelector('.active')) {
+                                    const items = inner.querySelectorAll('.carousel-item');
+                                    if (items.length > 0) {
+                                        items[0].classList.add('active');
+                                    }
+                                }
+                            });
+                        </script>
+                        {% comment %} <div class="carousel-item">
+                          <img src="https://storage.googleapis.com/shooper-beats/product/aea6ecbf-f820-439a-a3be-7be4df446070_Untitled-3.jpg" class="d-block w-100" alt="...">
+                        </div> {% endcomment %}
+
+                      </div>
+                      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                      </button>
+                      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                      </button>
+                    </div>
+
+                    <!-- Combined Thumbnails -->
+                    <div class="d-flex justify-content-center mt-3 gap-2 flex-wrap thumbnail-img">
+                         <!-- Main Images -->
+                        {% with image_urls=response.images|get_image_urls %}
+                            {% for img_url in image_urls %}
+                                <button type="button" 
+                                        data-bs-target="#carouselExampleControls" 
+                                        class="btn thumb-btn active-thumb-candidate rounded">
+                                    <img src="{{ img_url }}" class="img-fluid thumb-img" alt="Thumbnail" width="60" height="60">
+                                </button>
+                            {% endfor %}
+                        {% endwith %}
+
+                        <!-- Variant Images & Videos -->
+                        {% if response.variants %}
+                            {% for v in response.variants %}
+                                {% with vimages=v.images|get_image_urls %}
+                                    {% for img in vimages %}
+                                        <button type="button" 
+                                                data-bs-target="#carouselExampleControls" 
+                                                class="btn thumb-btn active-thumb-candidate rounded">
+                                            <img src="{{ img }}" class="img-fluid thumb-img" alt="Variant Thumbnail" width="60" height="60">
+                                        </button>
+                                    {% endfor %}
+                                    {% if v.images|get_video_url %}
+                                         <button type="button" 
+                                                data-bs-target="#carouselExampleControls" 
+                                                class="btn thumb-btn active-thumb-candidate rounded position-relative">
+                                            {% with video_url=v.images|get_video_url %}
+                                                {% if video_url|is_youtube_url %}
+                                                     <img src="https://img.youtube.com/vi/{{ video_url|get_youtube_embed_url|split:'/'|last }}/0.jpg" class="img-fluid thumb-img" alt="Video Thumbnail" width="60" height="60">
+                                                {% else %}
+                                                    <video muted class="thumb-img">
+                                                        <source src="{{ video_url }}" type="video/mp4">
+                                                    </video>
+                                                {% endif %}
+                                            {% endwith %}
+                                            <div class="video-overlay">
+                                                <i class="fas fa-play text-white"></i>
+                                            </div>
+                                        </button>
+                                    {% endif %}
+                                {% endwith %}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function() {
+                            const carousel = document.getElementById('carouselExampleControls');
+                            const thumbs = document.querySelectorAll('.thumbnail-img button');
+                            
+                            // Assign indices dynamically
+                            thumbs.forEach((btn, index) => {
+                                btn.setAttribute('data-bs-slide-to', index);
+                                btn.setAttribute('aria-label', 'Slide ' + (index + 1));
+                                if (index === 0) {
+                                    btn.classList.add('active-thumb');
+                                    btn.setAttribute('aria-current', 'true');
+                                }
+                                
+                                btn.addEventListener('click', () => {
+                                    // Update styling manually on click for immediate feedback
+                                    thumbs.forEach(t => {
+                                        t.classList.remove('active-thumb');
+                                    });
+                                    btn.classList.add('active-thumb');
+                                });
+                            });
+
+                            // Highlight active thumbnail on slide change
+                            carousel.addEventListener('slide.bs.carousel', function (event) {
+                                const index = event.to;
+                                thumbs.forEach((t, i) => {
+                                    if (i === index) {
+                                        t.classList.add('active-thumb');
+                                    } else {
+                                        t.classList.remove('active-thumb');
+                                    }
+                                });
+                            });
+                        });
+                    </script>
+
+
+
+
+
+
+
+
+
+                                <!-- Thumbnails -->
+                                {% if response.images %}
+                                    {% for video in response.images %}
+                                        {% if video.video_url %}
+                                            <h5 class="page-title">Video</h5>
+                                            <video src="{{ video.video_url }}"
+                                                   autoplay="autoplay"
+                                                   muted="muted"
+                                                   alt="PowerWire Pro Wiring Harness"
+                                                   class="img-fluid main-product-image mb-image"
+                                                   style="max-height: 480px;
+                                                          object-fit: contain;
+                                                          background: #f8f9fa;
+                                                          border: 1px solid #dee2e6">
+                                                       
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                      
+                                        <p>No videos to show</p>
+                                    {% endif %}
+                                    
+                                </div>
+                            </div>
+                            <!-- Left Column: Product Info -->
+                            <div class="col-lg-8">
+                                <h3 class="fw-bold mb-2">{{ response.title }} </h3>
+                                <div class="list-group-item px-0 mb-2">
+                                    <code class="sku">{{ response.sku }}</code>
+                                    <span class="status" style="">{{ response.status | capfirst }}</span>
+                                    <span class="status">{{ response.product_condition | capfirst }}</span>
+                                    <span class="status " style="{% if not response.fast_dispatch %}background-color: #f8acb3ff;color: #b85353ff;{% endif %}">Fast Dispatch: {% if response.fast_dispatch %}Yes{% else %}No{% endif %}</span>
+                                      <span class="status">Tags: {% for tag in response.tags %} <span class="badge bg-primary">{{ tag }}</span> {% endfor %}</span>
+                                    <span class="status " style="{% if not response.free_shipping %}background-color: #f8acb3ff;color: #b85353ff;{% endif %}">Free Shipping: {% if response.free_shipping %}Yes{% else %}No{% endif %}</span>
+                                    <span class="status " style="{% if not response.bundle_group_code %}background-color: #f8acb3ff;color: #b85353ff;{% endif %}">Bundle Group Code: {% if response.bundle_group_code %}{{ response.bundle_group_code }}{% else %}No{% endif %}</span>
+                                </div>
+                                <div class="card-elevated p-4 mb-4">
+                                    <div class="grid-5">
+                                        <div>
+                                            <p class="info-label mb-1">Category</p>
+                                            <p class="info-link">{{ response.category.name }}</p>
+                                        </div>
+                                        <div>
+                                            <p class="info-label mb-1">Brand</p>
+                                            <p class="info-link">{{ response.brand.name }}</p>
+                                        </div>
+                                        <!-- <div>
+                                            <p class="info-label mb-1">Country</p>
+                                            <p class="info-value">{{ response.country_of_origin | default:"Not Defined" }}</p>
+                                        </div> -->
+                                        <div>
+                                            <p class="info-label mb-1">Supplier</p>
+                                            <p class="info-value">{{ response.supplier | default:"Not Added" }}</p>
+                                        </div>
+                                        <div>
+                                            <p class="info-label mb-1">Ships from location</p>
+                                            <p class="info-value">{{ response.ships_from_location | default:"Not Added" }}</p>
+                                        </div>
+                                        <div>
+                                            <p class="info-label mb-1">HS Code</p>
+                                            <p class="info-value">{{ response.hs_code | default:"Not Added" }}</p>
+                                        </div>
+                                        <div>
+                                            <p class="info-label mb-1">Weight</p>
+                                            <p class="info-value">{{ response.weight | default:"Not defined" }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% if not response.variants %}
+                                <div class="card-elevated p-4 mb-4">
+                                    <h5 class="fw-bold mb-3">Pricing</h5>
+                                    <div class="grid-5">
+                                        <div>
+                                            <p class="info-label mb-1">Selling Price</p>
+                                            <p class="info-link cost-price">{{ response.price | default:"Not defined" }}</p>
+                                        </div>
+                                        <div>
+                                            <p class="info-label mb-1">RRP Price</p>
+                                            <p class="info-link price">{{ response.rrp_price | default:"Not defined" }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                <div class="card-elevated p-4 mb-4 seo-card">
+                                    <h5 class="fw-bold mb-3">SEO</h5>
+                                    <div class="grid-5">
+                                        <div>
+                                            <p class="info-label mb-1">Title</p>
+                                            <p class="info-link">{{ response.seo.page_title | default:"Not defined" }}</p>
+                                        </div>
+                                        <div>
+                                            <p class="info-label mb-1">Meta Description</p>
+                                            <p class="info-link">{{ response.seo.meta_description | default:"Not defined" }}</p>
+                                        </div>
+                                        <div>
+                                            <p class="info-label mb-1">Meta Keywords</p>
+                                            <p class="info-link">{{ response.seo.meta_keywords | default:"Not defined" }}</p>
+                                        </div>
+                                        <div>
+                                            <p class="info-label mb-1">URL Handles</p>
+                                            <p class="info-link">{{ response.seo.url_handle | default:"Not defined" }}</p>
+                                        </div>
+                                        <div>
+                                            <p class="info-label mb-1">Canonical Handles</p>
+                                            <p class="info-link">{{ response.seo.canonical_url | default:"Not defined" }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-elevated p-4 mb-4 seo-card">
+                                    <h5 class="fw-bold mb-3">Logs (Activity Logs)</h5>
+                                    <div class="grid-5">
+                                        <div>
+                                            <p class="info-label mb-1">Created At</p>
+                                            <p class="info-link">{{ response.created_at | default:"Not defined" }}</p>
+                                        </div>
+                                        <div>
+                                            <p class="info-label mb-1">Updated At</p>
+                                            <p class="info-link">{{ response.updated_at | default:"Not defined" }}</p>
+                                        </div>
+                                        <div>
+                                            <p class="info-label mb-1">Created By</p>
+                                            <p class="info-link">{{ response.admin.email | default:"Not defined" }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3 text-end">
+                                        <button type="button" 
+                                                class="btn btn-outline-primary btn-sm"
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#activityLogsModal">
+                                            <i class="fas fa-history me-1"></i> View Activity Logs
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- ====== Activity Logs Modal ====== -->
+                                <div class="modal fade" id="activityLogsModal" tabindex="-1" aria-labelledby="activityLogsModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title fw-bold" id="activityLogsModalLabel">
+                                                    <i class="fas fa-history me-2 text-primary"></i>Activity Logs
+                                                    <small class="text-muted ms-2 fs-6">— {{ response.title }}</small>
+                                                </h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <!-- Filters row -->
+                                                <div class="row g-2 mb-3">
+                                                    <div class="col-md-3">
+                                                        <select id="alFilterAction" class="form-select form-select-sm">
+                                                            <option value="">All Actions</option>
+                                                            <option value="create">Create</option>
+                                                            <option value="update">Update</option>
+                                                            <option value="delete">Delete</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <input type="text" id="alFilterPerformedBy" class="form-control form-control-sm" placeholder="Performed by…">
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <input type="date" id="alFilterStartDate" class="form-control form-control-sm" title="Start Date">
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <input type="date" id="alFilterEndDate" class="form-control form-control-sm" title="End Date">
+                                                    </div>
+                                                    <div class="col-md-2 d-flex gap-2">
+                                                        <button id="alApplyFilter" class="btn btn-primary btn-sm w-100">Apply Filter</button>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Spinner -->
+                                                <div id="alSpinner" class="text-center py-4 d-none">
+                                                    <div class="spinner-border text-primary" role="status">
+                                                        <span class="visually-hidden">Loading…</span>
+                                                    </div>
+                                                    <p class="mt-2 text-muted">Fetching activity logs…</p>
+                                                </div>
+
+                                                <!-- Error -->
+                                                <div id="alError" class="alert alert-danger d-none" role="alert"></div>
+
+                                                <!-- Table -->
+                                                <div id="alTableWrapper" class="table-responsive d-none">
+                                                    <table class="table table-sm align-middle table-striped-custom" id="alTable">
+                                                        <thead class="table-primary">
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Action</th>
+                                                                <th>Performed By</th>
+                                                                <th>Details</th>
+                                                                <th>Timestamp</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="alTableBody"></tbody>
+                                                    </table>
+                                                </div>
+
+                                                <!-- Empty state -->
+                                                <div id="alEmpty" class="text-center py-5 d-none">
+                                                    <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
+                                                    <p class="text-muted">No activity logs found for this product.</p>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                                <small id="alPaginationInfo" class="text-muted"></small>
+                                                <nav aria-label="Activity logs pagination">
+                                                    <ul class="pagination pagination-sm mb-0" id="alPagination"></ul>
+                                                </nav>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- / Activity Logs Modal -->
+
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function () {
+                                        const modal = document.getElementById('activityLogsModal');
+                                        if (!modal) return;
+
+                                        const PRODUCT_ID = '{{ response.id }}';
+                                        const API_BASE   = '{% product_domain %}';
+                                        const LIMIT      = 20;
+
+                                        let currentPage = 1;
+
+                                        function renderBadge(actionText) {
+                                            const action = (actionText || '').toLowerCase();
+                                            if (action.includes('create')) return `<span class="badge bg-success">${actionText}</span>`;
+                                            if (action.includes('update') || action.includes('edit')) return `<span class="badge bg-warning text-dark">${actionText}</span>`;
+                                            if (action.includes('delete') || action.includes('remove')) return `<span class="badge bg-danger">${actionText}</span>`;
+                                            return `<span class="badge bg-secondary">${actionText || 'Unknown'}</span>`;
+                                        }
+
+                                        function fmtDate(iso) {
+                                            if (!iso) return '—';
+                                            try { return new Date(iso).toLocaleString(); } catch { return iso; }
+                                        }
+
+                                        function fetchLogs(page) {
+                                            currentPage = page;
+
+                                            const spinner  = document.getElementById('alSpinner');
+                                            const errorEl  = document.getElementById('alError');
+                                            const tableW   = document.getElementById('alTableWrapper');
+                                            const tbody    = document.getElementById('alTableBody');
+                                            const emptyEl  = document.getElementById('alEmpty');
+                                            const pagInfo  = document.getElementById('alPaginationInfo');
+                                            const pagEl    = document.getElementById('alPagination');
+
+                                            spinner.classList.remove('d-none');
+                                            errorEl.classList.add('d-none');
+                                            tableW.classList.add('d-none');
+                                            emptyEl.classList.add('d-none');
+                                            pagEl.innerHTML = '';
+                                            pagInfo.textContent = '';
+
+                                            const params = new URLSearchParams({
+                                                entity_type: 'product',
+                                                entity_id:   PRODUCT_ID,
+                                                page:        page,
+                                                limit:       LIMIT
+                                            });
+
+                                            const action      = document.getElementById('alFilterAction').value;
+                                            const performedBy = document.getElementById('alFilterPerformedBy').value.trim();
+                                            const startDate   = document.getElementById('alFilterStartDate').value;
+                                            const endDate     = document.getElementById('alFilterEndDate').value;
+
+                                            if (action)      params.set('action', action);
+                                            if (performedBy) params.set('performed_by', performedBy);
+                                            if (startDate)   params.set('start_date', startDate);
+                                            if (endDate)     params.set('end_date', endDate);
+
+                                            fetch(`${API_BASE}/api/v1/activity-logs/list?${params.toString()}`)
+                                                .then(res => {
+                                                    if (!res.ok) throw new Error(`Status ${res.status}: Failed to fetch logs.`);
+                                                    return res.json();
+                                                })
+                                                .then(data => {
+                                                    spinner.classList.add('d-none');
+
+                                                    const items = data.items || data.results || data.data || [];
+                                                    const total = data.total || data.count || data.total_items || items.length;
+                                                    const totalPages = data.total_pages || data.pages || Math.ceil(total / LIMIT);
+
+                                                    if (items.length === 0) {
+                                                        emptyEl.classList.remove('d-none');
+                                                        return;
+                                                    }
+
+                                                    tbody.innerHTML = items.map((log, i) => `
+                                                        <tr>
+                                                            <td class="text-muted">${(page - 1) * LIMIT + i + 1}</td>
+                                                            <td>${renderBadge(log.action)}</td>
+                                                            <td>${log.performed_by || '—'}</td>
+                                                            <td>
+                                                                <div style="max-height: 100px; overflow-y: auto; font-size: 0.85rem;" class="text-break">
+                                                                    ${log.description || log.details || (log.changes ? JSON.stringify(log.changes) : '—')}
+                                                                </div>
+                                                            </td>
+                                                            <td class="text-nowrap">${fmtDate(log.created_at || log.timestamp)}</td>
+                                                        </tr>
+                                                    `).join('');
+
+                                                    tableW.classList.remove('d-none');
+                                                    pagInfo.textContent = `Showing page ${page} of ${totalPages || 1} (${total} total records)`;
+
+                                                    // Pagination UI
+                                                    if (totalPages > 1) {
+                                                        const pPrev = document.createElement('li');
+                                                        pPrev.className = `page-item ${page <= 1 ? 'disabled' : ''}`;
+                                                        pPrev.innerHTML = `<a class="page-link" href="#" data-page="${page - 1}">«</a>`;
+                                                        pagEl.appendChild(pPrev);
+
+                                                        let startP = Math.max(1, page - 4);
+                                                        let endP   = Math.min(totalPages, startP + 9);
+                                                        if (endP - startP < 9) startP = Math.max(1, endP - 9);
+
+                                                        for (let p = startP; p <= endP; p++) {
+                                                            const li = document.createElement('li');
+                                                            li.className = `page-item ${p === page ? 'active' : ''}`;
+                                                            li.innerHTML = `<a class="page-link" href="#" data-page="${p}">${p}</a>`;
+                                                            pagEl.appendChild(li);
+                                                        }
+
+                                                        const pNext = document.createElement('li');
+                                                        pNext.className = `page-item ${page >= totalPages ? 'disabled' : ''}`;
+                                                        pNext.innerHTML = `<a class="page-link" href="#" data-page="${page + 1}">»</a>`;
+                                                        pagEl.appendChild(pNext);
+
+                                                        // attach events
+                                                        pagEl.querySelectorAll('.page-link').forEach(btn => {
+                                                            btn.addEventListener('click', e => {
+                                                                e.preventDefault();
+                                                                const target = parseInt(e.currentTarget.getAttribute('data-page'), 10);
+                                                                if (!isNaN(target) && target >= 1 && target <= totalPages) {
+                                                                    fetchLogs(target);
+                                                                }
+                                                            });
+                                                        });
+                                                    }
+                                                })
+                                                .catch(err => {
+                                                    spinner.classList.add('d-none');
+                                                    errorEl.textContent = err.message;
+                                                    errorEl.classList.remove('d-none');
+                                                });
+                                        }
+
+                                        modal.addEventListener('show.bs.modal', function () {
+                                            if (currentPage === 1 && !document.getElementById('alTableWrapper').classList.contains('d-none')) {
+                                                // Prevent refetch if already fetched on first page without closing
+                                                // We will still re-fetch just in case data changed.
+                                            }
+                                            fetchLogs(1);
+                                        });
+
+                                        document.getElementById('alApplyFilter').addEventListener('click', function () {
+                                            fetchLogs(1);
+                                        });
+                                    });
+                                </script>
+                                {% if  response.variants|variantsexists %}
+                                {% else %}
+                                <div class="card-elevated p-4 mb-4">
+                                    <h5 class="fw-bold mb-3">Inventory</h5>
+                                    <div class="grid-5">
+                                        <div>
+                                            <p class="info-label mb-1">Main Stock</p>
+                                            <span class="badge-stock-alt">{{ response.stock | default:"Not defined" }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                <!-- Description -->
+                                <div class="card-elevated p-4 mb-4">
+                                    <h5 class="fw-bold mb-3">Description</h5>
+                                    <span>{{ response.description|default:"No description"|truncatewords_html:1000|safe }}</span>
+                                </div>
+                                <!-- Specifications -->
+                                <div class="card-elevated p-4 mb-4">
+                                    <h5 class="fw-bold mb-3">Specifications</h5>
+                                    <span>Length: {{ response.length }}</span>
+                                    <span>Width: {{ response.width }}</span>
+                                    <span>Height: {{ response.height }}</span>
+                                    <span>Weight: {{ response.weight }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Variants Table -->
+                        <div class="mt-5">
+                            <h5 class="fw-bold mb-4">Product Variants ({{ response.variants |length }})</h5>
+                            {% if response.variants %}
+                            <div class="table-responsive">
+                                <table class="table align-middle table-striped-custom">
+                                    <thead class="table-primary">
+                                        <tr>
+                                            <th>Variant SKU</th>
+                                            <th>Attributes</th>
+                                            <th>Dimensions</th>
+                                            <th>RRP Price</th>
+                                            <th>Selling Price</th>
+                                            <th>Stock</th>
+                                            <th>Image/Video</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                            {% for v in response.variants %}
+                                                <tr>
+                                                    <td>
+                                                        <code class="sku">{{ v.sku }}</code>
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge bg-secondary me-1 mb-1">
+                                                            {% for attr in v.attributes %}<span>{{ attr.name }} : {{ attr.value }} </span>{% endfor %}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <small class="d-block text-muted">L: {{ v.length|default:"-" }}</small>
+                                                        <small class="d-block text-muted">W: {{ v.width|default:"-" }}</small>
+                                                        <small class="d-block text-muted">H: {{ v.height|default:"-" }}</small>
+                                                        <small class="d-block text-muted">Wt: {{ v.weight|default:"-" }}</small>
+                                                    </td>
+                                                    <td>{{ v.rrp_price }}</td>
+                                                    <td>{{ v.price }}</td>
+                                                    <td>
+                                                        <span class="badge bg-success fs-6">{{ v.stock }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <div class="d-flex gap-2 flex-wrap">
+                                                                                    {% with vimages=v.images|get_image_urls %}
+
+                                                        {% for img in vimages %}
+                                                            <!-- <small class="text-muted">—</small> -->
+                                                            <img src="{{ img }}" style="width: 80px;height: 80px;"/>
+
+                                                
+                                                        {% endfor %}
+                                                        {% endwith %}
+                                                                    {% if v.images|get_video_url %}
+                                                              
+                                                                        <video autoplay muted loop playsinline width="80" height="80">
+                                                                            <source src="{{ v.images|get_video_url }}" type="video/mp4">
+                                                                        </video>
+                                                            {% endif %}
+                                                        </div>
+                                                        
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            <p>No variants to show</p>
+                        {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Main Content -->
+    {% endblock content %}

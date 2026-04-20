@@ -1,0 +1,86 @@
+{% extends 'adminuser/_template.html' %}
+{% load static %}
+
+{% block title %}Customer List{% endblock %}
+
+{% block content %}
+<div class="container-fluidd px-4">
+    <div class="row">
+        <!-- Main content -->
+        <div>
+            <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+                <h5 class="page-title">
+                  Customers
+                </h5>
+                <a href="{% url 'customer_create'%}" class="red-btn">
+                     Create New Customer
+                </a>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-primary">
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Active</th>
+                            <th scope="col">First Name</th>
+                            <th scope="col">Last Name</th>
+                            <th scope="col">Last Login</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in data %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'user_detail' i.id %}"
+                                    class="text-decoration-none text-black fw-semibold">
+                                    {{ i.id }}
+                                </a>
+                            </td>
+                            <td>{{ i.email }}</td>
+                            <td>
+                                {% if i.is_active %}
+                                <span class="badge bg-success">Active</span>
+                                {% else %}
+                                <span class="badge bg-danger">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ i.first_name }}</td>
+                            <td>{{ i.last_name }}</td>
+                            <td>{{ i.last_login|date:"Y-m-d H:i" }}</td>
+                            <td class="action-icon">
+                                 <div class="action-wrapper">
+                                <a href="{% url 'customer_reset_password' i.id %}"
+                                    class="btn btn-sm btn-outline-warning me-1" title="Reset Password">
+                                    <i class="bi bi-shield-lock"></i>
+                                </a>
+                                <a href="{% url 'customer_update' i.id %}" class="btn btn-sm btn-outline-primary"
+                                    title="Edit Customer">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-4">
+                                No customers found.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="text-center  mt-3 pb-3">
+        © <span id="year"></span> ShopperBeats. All rights reserved.
+      </div>
+<!-- Bootstrap Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
+{% endblock content %}
+
+

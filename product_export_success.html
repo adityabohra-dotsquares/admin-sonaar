@@ -1,0 +1,49 @@
+{% extends "adminuser/_template.html" %}
+
+{% load static %}
+{% block content %}
+<h2>Products Export</h2>
+
+<style>
+    .drop-zone {
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .drop-zone.dragover {
+        border-color: var(--bs-primary);
+        background-color: rgba(13, 110, 253, 0.1) !important;
+        transform: scale(1.02);
+    }
+
+    .hover-bg-primary-subtle:hover {
+        background-color: rgba(13, 110, 253, 0.05) !important;
+    }
+
+    .transition-all {
+        transition: all 0.3s ease;
+    }
+</style>
+<div class="card shadow-sm border-0">
+    <div class="card-body p-5">
+        <h4 class="card-title mb-4 text-dark">
+            <i class="bi bi-cloud-upload me-2"></i>Export Products Status
+        </h4>
+        {% if messages %}
+            <div class="alert alert-success">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if data %}
+            <div class="alert alert-success">
+                <p>Task ID: {{ data.task_id }}</p>
+                <p>Status: {{ data.status }}</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+
+{% endblock content %}

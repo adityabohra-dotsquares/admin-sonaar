@@ -1,0 +1,44 @@
+{% extends "adminuser/_template.html" %}
+{% block content %}
+<div class="container-fluidd px-4">
+ <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+        <h5 class="page-title">{{ title }}</h5>
+        <a href="{% url 'email_template_create' %}" class="red-btn">
+            Create New Template
+        </a>
+    </div>
+{% include "adminuser/_messages.html" %}
+{% if templates %}
+<div class="card mb-4">
+     <div class="card-body">
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Key</th>
+            <th>Subject</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for template in templates %}
+        <tr>
+            <td><strong>{{ template.key }}</strong></td>
+            <td>{{ template.subject }}</td>
+            <td class="action-icon">
+                <a href="{% url 'email_template_update' template.pk %}" class="btn btn-sm btn-primary">
+                    <i class="bi bi-pencil"></i>
+                </a>
+                <!-- Optional: add delete button later -->
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+</div>
+{% else %}
+<p>No email templates found.</p>
+{% endif %}
+</div>
+
+{% endblock %}

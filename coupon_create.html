@@ -1,0 +1,215 @@
+{% extends "adminuser/_template.html" %}
+{% load product_extras %}
+{% block content %}
+
+<div class="container-fluid px-4">
+<div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+        <h5 class="page-title">Coupon</h5>
+    </div>
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+<div class="card-header">
+     <h5 class="page-title mb-3"> {{ editing_coupon|yesno:"Edit Coupon,Create New Coupon" }}</h5>
+    </div>
+
+<div class="card mb-4">
+    
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+    <div>
+    <div class="card-body coupon-page-body">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Coupon Code</label>
+            {{ form.code }}
+            <small class="text-muted">{{ form.code.help_text }}</small>
+            {% if form.code.errors %}
+                <div class="text-danger">{{ form.code.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Coupon Name</label>
+            {{ form.name }}
+            <small class="text-muted">{{ form.name.help_text }}</small>
+            {% if form.name.errors %}
+                <div class="text-danger">{{ form.name.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="col-md-12 mb-3">
+            <label class="form-label">Description</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+                <div class="text-danger">{{ form.description.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <label class="form-label">Discount Type</label>
+            {{ form.discount_type }}
+            {% if form.discount_type.errors %}
+                <div class="text-danger">{{ form.discount_type.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="col-md-4 mb-3">
+            <label class="form-label">Discount Value</label>
+            {{ form.discount_value }}
+            {% if form.discount_value.errors %}
+                <div class="text-danger">{{ form.discount_value.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="col-md-4 mb-3">
+            <label class="form-label">Max Discount Amount</label>
+            {{ form.max_discount_amount }}
+            {% if form.max_discount_amount.errors %}
+                <div class="text-danger">{{ form.max_discount_amount.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Min Order Value</label>
+            {{ form.min_order_value }}
+            {% if form.min_order_value.errors %}
+                <div class="text-danger">{{ form.min_order_value.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Applicable Categories</label>
+            {% if editing_coupon %}
+            <select name="applicable_categories" id="id_applicable_categories" class="form-control" multiple>
+                {% for category in coupon.applicable_categories %}
+                    <option value="{{ category }}" selected>{{ category }}</option>
+                {% endfor %}
+            </select>
+            {% else %}
+            {{ form.applicable_categories }}
+            {% endif %}
+            <small class="text-muted">Hold Ctrl/Cmd to select multiple</small>
+            {% if form.applicable_categories.errors %}
+                <div class="text-danger">{{ form.applicable_categories.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Start Date</label>
+            {{ form.start_date }}
+            {% if form.start_date.errors %}
+                <div class="text-danger">{{ form.start_date.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label">End Date</label>
+            {{ form.end_date }}
+            {% if form.end_date.errors %}
+                <div class="text-danger">{{ form.end_date.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <label class="form-label">Status</label>
+            {{ form.status }}
+            {% if form.status.errors %}
+                <div class="text-danger">{{ form.status.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="col-md-4 mb-3">
+            <label class="form-label">Usage Limit</label>
+            {{ form.usage_limit }}
+            {% if form.usage_limit.errors %}
+                <div class="text-danger">{{ form.usage_limit.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="col-md-4 mb-3">
+            <label class="form-label">Per User Limit</label>
+            {{ form.per_user_limit }}
+            {% if form.per_user_limit.errors %}
+                <div class="text-danger">{{ form.per_user_limit.errors }}</div>
+            {% endif %}
+        </div>
+
+        {{ form.uuid }}
+      </div>
+      <button type="submit" class="btn btn-primary mt-3">
+        {{ editing_coupon|yesno:"Update,Create" }} Coupon
+      </button>
+      {% if editing_coupon %}
+        <a href="{% url 'coupon_list_form' %}" class="btn btn-secondary mt-3">Cancel</a>
+      {% endif %}
+    </div>
+  </div>
+</form>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.10.0/dist/css/bootstrap-datepicker.min.css">
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.10.0/dist/js/bootstrap-datepicker.min.js"></script>
+{% comment %} <script>
+   $('#id_start_date').datepicker({
+    format: 'yyyy-mm-dd',
+    autoclose: true,
+    todayHighlight: true
+});
+   $('#id_end_date').datepicker({
+    format: 'yyyy-mm-dd',
+    autoclose: true,
+    todayHighlight: true
+});
+ 
+        </script> {% endcomment %}
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+      rel="stylesheet" />
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+        <script>
+    $('.select2Category').select2({
+        placeholder: "Select Subcategory",
+        ajax: {
+            url: "{% product_domain %}/api/v1/category-admin/categories/search",
+            dataType: "json",
+            delay: 250,
+
+            data: function (params) {
+                return {
+                    q: params.term || null,
+                    page: params.page || 1,
+                    limit: 5
+                };
+            },
+
+            processResults: function (data, params) {
+                params.page = params.page || 1;
+
+                return {
+                    results: data.select2.results.map(function (item) {
+                        return {
+                            id: item.id,
+                            text: item.text
+                        };
+                    }),
+
+                    pagination: {
+                        more: data.page < data.pages    // 👈 lazy load next page
+                    }
+                };
+            }}
+    });
+     // CRITICAL: If option already exists (from Django), show it!
+            const $category = $('.select2Category');
+            const selectedOption = $category.find('option:selected');
+            if (selectedOption.length) {
+                $category.append(new Option(selectedOption.text(), selectedOption.val(), true, true)).trigger('change');
+            }
+</script>
+{% endblock content %}

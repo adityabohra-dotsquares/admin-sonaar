@@ -1,0 +1,16 @@
+{% extends 'adminuser/_template.html' %}
+{% block content %}
+
+<div class="container-fluidd px-4">
+    <h5 class="page-title pb-2">Import Reviews</h5>
+        <div class="card mb-4">
+     <div class="card-body">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Import</button>
+    </form>
+</div>
+</div>
+</div>
+{% endblock %}

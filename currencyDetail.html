@@ -1,0 +1,9 @@
+{% if currency is None %}
+<h1>Create new </h1>
+<!-- <form method="pos"></form> -->
+<a href="{% url 'currency_add_or_update' %}">Add Currency</a>
+{%else%}
+<h1>{{currency.name}} {{currency.symbol}}</h1>
+{% endif %}
+
+<!-- for vendor specific -->

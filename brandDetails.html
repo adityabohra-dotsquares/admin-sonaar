@@ -1,0 +1,92 @@
+{% extends "adminuser/_template.html" %}
+{% load static %}
+{% block title %}Brand Details{% endblock %}
+
+{% block content %}
+<div class="container-fluidd px-4">
+    <div class="row">
+        <!-- Sidebar -->
+
+        <!-- Main Content -->
+        <div>
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="page-title">
+                   Brand Details
+                </h5>
+                <a href="{% url 'brand_list' %}" class="red-btn">
+                    Back to List
+                </a>
+            </div>
+            {% if response.error %}
+            <div class="alert alert-info mt-3" role="alert">
+                <i class="bi bi-info-circle me-2"></i>{{response.error.detail}}
+            </div>
+            {%else%}
+            <!-- Brand Card -->
+            <div class="card border-0 shadow-sm brand-card">
+                <div class="card-header bg-gradient bg-primary text-white d-flex justify-content-between align-items-center"
+                    style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                    <h5 class="mb-0 fw-semibold">
+                        <i class="bi bi-building me-2"></i>{{ response.data.name }}
+                    </h5>
+                    <span class="badge bg-light text-primary fw-normal px-3 py-2">ID: {{ response.id }}</span>
+                </div>
+
+                <div class="card-body text-center py-5">
+                    {% if response.data.logo_url %}
+                    <img src="{{ response.data.logo_url }}" alt="{{ response.data.name }}"
+                        class="img-fluid rounded-circle shadow-sm mb-3 border border-3 border-light"
+                        style="width: 120px; height: 120px; object-fit: cover;">
+                    {% else %}
+                    <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-3"
+                        style="width: 120px; height: 120px; font-size: 2rem;">
+                        <i class="bi bi-image"></i>
+                    </div>
+                    {% endif %}
+
+                    <h4 class="fw-bold text-dark mb-2">{{ response.data.name }}</h4>
+                    <p class="text-muted small mb-4">
+                        {{ response.data.description|default:"No description available." }}
+                    </p>
+
+                    <div class="d-flex justify-content-center gap-2">
+                        <a href="{% url 'brand_edit' response.data.id %}" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-pencil me-1"></i> Edit
+                        </a>
+                        <a href="{% url 'brand_delete' response.data.id %}" class="btn btn-outline-danger btn-sm">
+                            <i class="bi bi-trash me-1"></i> Delete
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Meta Info -->
+            <div class="mt-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <h6 class="fw-bold mb-3 text-secondary">
+                            <i class="bi bi-info-circle me-1"></i>Additional Information
+                        </h6>
+                        <ul class="list-unstyled mb-0">
+                            <li><strong>Created At:</strong> {{ response.data.created_at|date:"M d, Y H:i" }}</li>
+                            <li><strong>Updated At:</strong> {{ response.data.updated_at|date:"M d, Y H:i" }}</li>
+                            <li><strong>Status:</strong>
+                                {% if response.data.is_active %}
+                                <span class="badge bg-success">Active</span>
+                                {% else %}
+                                <span class="badge bg-danger">Inactive</span>
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {%endif%}
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
+{% endblock content %}

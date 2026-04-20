@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ShopperBeats - Dashboard</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+
+  <div class="d-flex" id="wrapper">
+
+    <!-- Sidebar -->
+    <nav id="sidebar" class="bg-white">
+      <div class="sidebar-header py-3 px-3">
+        <img src="/images/dashboard/logo.svg" alt="logo" class="logo-img" />
+      </div>
+
+      <ul class="list-unstyled components">
+        <li class="mb-2 active">
+          <a href="Dashboard.html" class="d-flex align-items-center">
+            <img src="/images/sidebar/DashboardIcon.svg" alt="">
+            Dashboard
+          </a>
+        </li>
+        <li class="mb-2"><a href="Vendors.html"><img src="/images/sidebar/VendorIcon.svg" alt=""> Vendors</a></li>
+        <li class="mb-2"><a href="OrderManagement.html"><img src="/images/sidebar/OrderManagementIcon.svg" alt=""> Order Management</a></li>
+        <li class="mb-2"><a href="Brands.html"><img src="/images/sidebar/BrandsIcon.svg" alt=""> Brands</a></li>
+        <li class="mb-2"><a href="Categories.html"><img src="/images/sidebar/CategoriesIcon.svg" alt=""> Categories</a></li>
+        <li class="mb-2"><a href="#"><img src="/images/sidebar/ProductIcon.svg" alt=""> Products</a></li>
+        <li class="mb-2"><a href="#"><img src="/images/sidebar/CustomerIcon.svg" alt=""> Customers</a></li>
+        <li class="mb-2"><a href="#"><img src="/images/sidebar/StaffUserIcon.svg" alt=""> Staff Users</a></li>
+        <li class="mb-2"><a href="#"><img src="/images/sidebar/RolesIcon.svg" alt=""> Roles</a></li>
+        <li class="mb-2"><a href="#"><img src="/images/sidebar/LogoutIcon.svg" alt=""> Logout</a></li>
+      </ul>
+    </nav>
+    <!-- /#sidebar -->
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper" class="w-100">
+
+      <!-- Topbar -->
+      <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+        <div class="container-fluid">
+
+          <div id="sidebarToggle">
+            <img class="toggle-icon" src="/images/dashboard/toggle.svg" alt="">
+          </div>
+
+          <form class="d-none d-md-flex ms-3 w-30">
+            <div class="input-group rounded-pill">
+              <span class="input-group-text bg-white border-end-0 rounded-pill-start">
+                <i class="bi bi-search"></i>
+              </span>
+              <input class="form-control form-control-sm border-start-0 rounded-pill-end"
+                type="search" placeholder="Search here" aria-label="Search">
+            </div>
+          </form>
+
+          <div class="d-flex align-items-center ms-auto">
+            <div class="bg-notify">
+              <img src="/images/dashboard/notify.svg" alt="notifications">
+            </div>
+            <div class="me-3 text-end d-none d-md-block">
+              <div class="small">Welcome, Admin</div>
+            </div>
+            <img src="/images/dashboard/profile.svg" style="width:34px;" class="rounded-circle" alt="avatar">
+          </div>
+
+        </div>
+      </nav>
+
+      <!-- Main content -->
+      <div class="container-fluidd p-4">
+
+        <h5 class="page-title pb-3">Dashboard</h5>
+
+        <!-- Top cards -->
+        <div class="row mb-4">
+          <!-- Card -->
+          <div class="col-lg-3 col-md-6 mb-4">
+            <div class="dashboard-card">
+              <div class="card-header-flex">
+                <div class="icon-box">
+                  <img src="/images/dashboard/vendor.svg" alt="">
+                </div>
+                <h6 class="card-title mt-2">Vendors</h6>
+              </div>
+              <h5 class="card-number mt-4">3,782</h5>
+            </div>
+          </div>
+
+          <!-- Repeat cards -->
+          <div class="col-lg-3 col-md-6 mb-4">
+            <div class="dashboard-card">
+              <div class="card-header-flex">
+                <div class="icon-box">
+                  <img src="/images/dashboard/order.svg" alt="">
+                </div>
+                <h6 class="card-title mt-2">Orders</h6>
+              </div>
+              <h5 class="card-number mt-4">3,782</h5>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 mb-4">
+            <div class="dashboard-card">
+              <div class="card-header-flex">
+                <div class="icon-box">
+                  <img src="/images/dashboard/sales.svg" alt="">
+                </div>
+                <h6 class="card-title mt-2">Total Sales</h6>
+              </div>
+              <h5 class="card-number mt-4">3,782</h5>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 mb-4">
+            <div class="dashboard-card">
+              <div class="card-header-flex">
+                <div class="icon-box">
+                  <img src="/images/dashboard/reviews.svg" alt="">
+                </div>
+                <h6 class="card-title mt-2">Total Reviews</h6>
+              </div>
+              <h5 class="card-number mt-4">3,782</h5>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts row -->
+        <div class="row g-3 mb-4 monthly-row">
+
+          <div class="col-lg-6">
+            <div class="card h-100">
+              <div class="card-body">
+                <h6 class="mb-3 fw-semibold">Monthly Sales</h6>
+                <canvas id="salesBarChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6 col-md-6">
+            <div class="card monthly-target p-4 h-100">
+              <h6 class="mb-3 fw-semibold">Monthly Target</h6>
+
+              <!-- Gauge -->
+              <div class="gauge-wrapper">
+                <svg class="gauge-svg" viewBox="0 0 100 50">
+                  <path class="gauge-bg" d="M10 50 A40 40 0 0 1 90 50" />
+                  <path class="gauge-fill" style="--percent:0.15" d="M10 50 A40 40 0 0 1 90 50" />
+                </svg>
+
+                <div class="gauge-cover"></div>
+
+                <div class="gauge-content">
+                  <span class="gauge-value mt-2">85%</span>
+                  <span class="gauge-badge">+10%</span>
+                </div>
+              </div>
+
+              <p class="text-center mt-3">
+                You earn $3287 today, it’s higher than last month. Keep up your good work!
+              </p>
+
+              <div class="row mt-4 text-center">
+                <div class="col-md-4">
+                  <div class="target-card">
+                    <p class="label">Target</p>
+                    <h6 class="value">$20K <img src="/images/dashboard/down.svg" class="down" alt=""></h6>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="target-card">
+                    <p class="label">Revenue</p>
+                    <h6 class="value">$20K <img src="/images/dashboard/up.svg" class="up" alt=""></h6>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="target-card">
+                    <p class="label">Today</p>
+                    <h6 class="value">$20K <img src="/images/dashboard/up.svg" class="down" alt=""></h6>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Recent Orders table -->
+        <div class="card table-card mb-4">
+          <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h6 class="my-2 fw-semibold">Recent Orders</h6>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table align-middle table-striped-custom">
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Order ID</th>
+                    <th>Product</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>#4564</td>
+                    <td class="d-flex align-items-center">
+                      <img src="/images/dummy.png" class="prod-thumb me-2" alt="product"> Macbook Pro 13”
+                    </td>
+                    <td>Laptop</td>
+                    <td>$2290.00</td>
+                    <td><span class="badge bg-success rounded-pill px-3 badge-light-text">Delivered</span></td>
+                  </tr>
+
+                  <tr>
+                    <td>2</td>
+                    <td>#4566</td>
+                    <td class="d-flex align-items-center">
+                      <img src="/images/dummy.png" class="prod-thumb me-2" alt="product"> Apple Watch Ultra
+                    </td>
+                    <td>Watch</td>
+                    <td>$199.00</td>
+                    <td><span class="badge bg-warning rounded-pill px-3 badge-light-text">Pending</span></td>
+                  </tr>
+
+                  <tr>
+                    <td>3</td>
+                    <td>#4568</td>
+                    <td class="d-flex align-items-center">
+                      <img src="/images/dummy.png" class="prod-thumb me-2" alt="product"> iPhone 15 Pro Max
+                    </td>
+                    <td>Smartphone</td>
+                    <td>$1299.00</td>
+                    <td><span class="badge bg-danger rounded-pill px-3 badge-light-text">Cancelled</span></td>
+                  </tr>
+
+                  <tr>
+                    <td>4</td>
+                    <td>#4570</td>
+                    <td class="d-flex align-items-center">
+                      <img src="/images/dummy.png" class="prod-thumb me-2" alt="product"> iPad Pro 5th Gen
+                    </td>
+                    <td>Electronics</td>
+                    <td>$899.00</td>
+                    <td><span class="badge bg-success rounded-pill px-3 badge-light-text">Delivered</span></td>
+                  </tr>
+
+                  <tr>
+                    <td>5</td>
+                    <td>#4572</td>
+                    <td class="d-flex align-items-center">
+                      <img src="/images/dummy.png" class="prod-thumb me-2" alt="product"> AirPods 3rd Gen
+                    </td>
+                    <td>Accessories</td>
+                    <td>$299.00</td>
+                    <td><span class="badge bg-warning rounded-pill px-3 badge-light-text">Pending</span></td>
+                  </tr>
+
+                  <tr>
+                    <td>6</td>
+                    <td>#4574</td>
+                    <td class="d-flex align-items-center">
+                      <img src="/images/dummy.png" class="prod-thumb me-2" alt="product"> Apple Watch Ultra
+                    </td>
+                    <td>Watch</td>
+                    <td>$299.00</td>
+                    <td><span class="badge bg-success rounded-pill px-3 badge-light-text">Delivered</span></td>
+                  </tr>
+
+                  <tr>
+                    <td>7</td>
+                    <td>#4576</td>
+                    <td class="d-flex align-items-center">
+                      <img src="/images/dummy.png" class="prod-thumb me-2" alt="product"> Dell Desktop Computer
+                    </td>
+                    <td>Electronics</td>
+                    <td>$439.00</td>
+                    <td><span class="badge bg-danger rounded-pill px-3 badge-light-text">Cancelled</span></td>
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Footer -->
+       
+
+      </div>
+       <div class="text-center  mt-3 pb-3">
+          © <span id="year"></span> ShopperBeats. All rights reserved.
+        </div>
+      <!-- /Main content -->
+
+    </div>
+    <!-- /#page-content-wrapper -->
+
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    document.getElementById('sidebarToggle').addEventListener('click', function () {
+      document.getElementById('sidebar').classList.toggle('collapsed');
+    });
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const ctxBar = document.getElementById('salesBarChart').getContext('2d');
+    new Chart(ctxBar, {
+      type: 'bar',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        datasets: [{
+          label: 'Sales',
+          data: [120, 150, 100, 170, 140, 180, 160, 190, 200, 230, 250, 280],
+          borderRadius: 6,
+          barThickness: 18,
+          backgroundColor: '#5252F9'
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, ticks: { stepSize: 50 } }
+        }
+      }
+    });
+  </script>
+
+</body>
+
+</html>

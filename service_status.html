@@ -1,0 +1,124 @@
+{% extends "adminuser/_template.html" %}
+{% block content %}
+
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+        <h5 class="page-title">Services Status Dashboard</h5>
+        <div>
+            <button id="refresh-all-btn" class="btn btn-primary">
+                <i class="bi bi-arrow-clockwise"></i> Check Now
+            </button>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span>System Services Status</span>
+            <span class="badge bg-secondary" id="last-updated-badge">Last update: Loading...</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Service Name</th>
+                            <th>Endpoint URL</th>
+                            <th>Status</th>
+                            <th>Response Time</th>
+                            <th>Last Checked</th>
+                        </tr>
+                    </thead>
+                    <tbody id="services-table-body">
+                        <!-- Dynamic content will load here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const services = [
+        { name: "Product Service", url: "https://shopper-beats-products-877627218975.australia-southeast2.run.app/live" },
+        { name: "Order Service", url: "https://shopper-beats-orders-877627218975.australia-southeast2.run.app/live" },
+        { name: "Cart Service", url: "https://shopper-beats-cart-877627218975.australia-southeast2.run.app/live" },
+        { name: "Frontend", url: "https://shopper-beats-frontend-877627218975.australia-southeast2.run.app/" },
+        { name: "Auth Service", url: "https://shopper-beats-auth-877627218975.australia-southeast2.run.app/live" }
+    ];
+
+    function renderTable() {
+        const tbody = document.getElementById('services-table-body');
+        tbody.innerHTML = services.map((service, index) => `
+            <tr id="service-row-${index}">
+                <td class="fw-semibold">${service.name}</td>
+                <td><small class="text-muted"><a href="${service.url}" target="_blank">${service.url}</a></small></td>
+                <td>
+                    <span class="badge bg-warning status-badge"><i class="bi bi-hourglass-split"></i> Checking...</span>
+                </td>
+                <td class="ping-cell">-</td>
+                <td class="time-cell">-</td>
+            </tr>
+        `).join('');
+    }
+
+    function checkStatus(service, index) {
+        const row = document.getElementById(`service-row-${index}`);
+        const badge = row.querySelector('.status-badge');
+        const pingCell = row.querySelector('.ping-cell');
+        const timeCell = row.querySelector('.time-cell');
+
+        const startTime = performance.now();
+        const checkUrl = service.url + (service.url.endsWith('/') ? '' : '') + '?t=' + Date.now(); // Cache busting
+
+        fetch(checkUrl, { method: 'GET', mode: 'no-cors' }) // Use no-cors for cross-domain without CORS headers
+            .then(response => {
+                const duration = Math.round(performance.now() - startTime);
+                // no-cors returns opaque response (status 0). 
+                // We assume if fetch resolves without error, the server is reachable.
+                badge.className = "badge bg-success";
+                badge.innerHTML = '<i class="bi bi-check-circle-fill"></i> Reachable';
+                pingCell.innerHTML = `<span class="text-success">${duration} ms</span>`;
+                timeCell.innerHTML = new Date().toLocaleTimeString();
+            })
+            .catch(error => {
+                const duration = Math.round(performance.now() - startTime);
+                badge.className = "badge bg-danger";
+                badge.innerHTML = '<i class="bi bi-x-circle-fill"></i> Unreachable';
+                pingCell.innerHTML = `<span class="text-danger">${duration} ms</span>`;
+                timeCell.innerHTML = new Date().toLocaleTimeString();
+                console.error(`Error checking ${service.name}:`, error);
+            });
+    }
+
+    function checkAll() {
+        services.forEach((service, index) => checkStatus(service, index));
+        document.getElementById('last-updated-badge').innerHTML = `Last update: ${new Date().toLocaleTimeString()}`;
+    }
+
+    document.getElementById('refresh-all-btn').addEventListener('click', checkAll);
+
+    // Initial load
+    renderTable();
+    checkAll();
+
+    // Auto refresh every 30 seconds
+    setInterval(checkAll, 30000);
+</script>
+
+<style>
+    .page-title {
+        color: #2c3e50;
+        font-weight: 600;
+        border-left: 4px solid #F15454; /* matching user's red theme if exists */
+        padding-left: 10px;
+    }
+    .badge {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.6rem;
+    }
+    .table-hover tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+</style>
+
+{% endblock content %}

@@ -1,0 +1,95 @@
+{% extends 'adminuser/_template.html' %}
+{% block content %}
+    <!-- Main Content -->
+    <div class="container-fluidd px-4">
+
+      <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+        <h5 class="page-title">Vendors</h5>
+        <a href="{% url 'vendor_add' %}" class="red-btn">Add Vendor</a>
+      </div>
+
+      <!-- Vendors Table -->
+      <div class="card table-card mb-4">
+        <div class="card-body">
+
+          <div class="table-responsive">
+            <table class="table align-middle table-striped-custom">
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Vendor Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <!-- Table rows repeated -->
+                <!-- Suggest converting to dynamic template later -->
+                    {% for i in data %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>
+                                    <a href="{{ i.id }}" class="text-decoration-none text-dark fw-semibold">
+                                        {{ i.name }}
+                                    </a>
+                                </td>
+                                <td>{{ i.email|default:"-" }}</td>
+                                <td>{{ i.phone|default:"-" }}</td>
+                                <td class="action-icon">
+                                    <a href="{% url 'vendor_update' i.id%}" class="btn btn-sm btn-outline-primary me-1">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <!-- <a href="/vendor/delete/{{ i.id }}" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </a> -->
+                                </td>
+                            </tr>
+                            {% endfor %}
+  
+            <!-- Vendor List -->
+            {% if data %}
+
+            {% else %}
+            <div class="alert alert-info mt-3" role="alert">
+                <i class="bi bi-info-circle me-2"></i>No vendors found.
+            </div>
+            {% endif %}
+                <!-- ... other rows remain unchanged ... -->
+                
+              </tbody>
+
+            </table>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Pagination Footer -->
+      <div class="pagination-footer-container bg-white p-2 rounded-bottom">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+          <nav aria-label="Table navigation">
+            <ul class="pagination pagination-sm mb-2 mb-md-0">
+              <li class="page-item active"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item"><a class="page-link" href="#">4</a></li>
+              <li class="page-item"><a class="page-link" href="#">5</a></li>
+              <li class="page-item disabled"><span class="page-link">...</span></li>
+              <li class="page-item"><a class="page-link" href="#">24</a></li>
+            </ul>
+          </nav>
+          <p>Showing 8 per page — Total 69 items</p>
+        </div>
+      </div>
+
+      <!-- Footer -->
+     
+
+    </div>
+     <div class="text-center  mt-3 pb-3">
+        © <span id="year"></span> ShopperBeats. All rights reserved.
+      </div>
+    <!-- /Main Content -->
+{% endblock content %}

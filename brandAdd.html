@@ -1,0 +1,27 @@
+{% extends "adminuser/_template.html" %}
+{% load static %}
+{% block title %}Add Brand{% endblock %}
+{% block content %}
+<!-- Main Content -->
+<div class="container-fluidd p-4">
+  <h5 class="page-title pb-2">Add Brand</h5>
+{% if errors %}
+<div class="alert alert-danger">{{ errors }}</div>
+{% endif %} 
+
+{% if form.non_field_errors %}
+<div class="alert alert-danger">{{ form.non_field_errors }}</div>
+{% endif %}
+  <div class="card mb-4">
+    <div class="card-body pt-0">
+
+      {% include 'adminuser/brand/_form.html'%}
+      <!-- Footer -->
+    </div>
+  </div>
+</div>
+<div class="text-center  mt-3 pb-3">
+  © <span id="year"></span> ShopperBeats. All rights reserved.
+</div>
+<!-- /Main Content -->
+{% endblock content %}

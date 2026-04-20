@@ -1,0 +1,133 @@
+{% extends "adminuser/_template.html" %}
+{% block content %}
+
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<style>
+  /* .select2-container {
+    width: 100% !important;
+  } */
+  .select2-selection {
+    height: auto !important;
+    min-height: 38px !important;
+  }
+  .select2-container--default .select2-selection--single {
+    border: 1px solid var(--lightgray) !important;
+        height: 48px !important;
+}
+.select2-container--default .select2-selection--single .select2-selection__clear {
+    height: 45px;
+}
+span.select2.select2-container.select2-container--default {
+    border: none;
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 48px;
+}
+</style>
+
+<div class="container-fluid px-4" style="margin-top: 80px;">
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+        <h5 class="page-title">Create Delivery Zone</h5>
+        <div>
+        <a href="{% url 'delivery_zone_list_form' %}" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<form method="post">
+  {% csrf_token %}
+  <div class="card mb-4">
+        
+    
+    <div class="card-body rate-card">
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <label>{{ form.zone_code.label }}</label>
+          {{ form.zone_code }}
+          <small class="form-text text-muted">{{ form.zone_code.help_text }}</small>
+        </div>
+        <div class="col-md-6 mb-4">
+          <label>{{ form.zone_name.label }}</label>
+          {{ form.zone_name }}
+        </div>
+        <div class="col-md-12 d-flex">
+          <div class="form-check">
+            {{ form.is_active }}
+            <label class="form-check-label">{{ form.is_active.label }}</label>
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary mt-3">
+        Create Zone
+      </button>
+      <a href="{% url 'delivery_zone_list_form' %}" class="btn btn-secondary mt-3">Cancel</a>
+    </div>
+  </div>
+</form>
+
+</div>
+
+<script>
+$(document).ready(function() {
+    // Initialize Select2 on zone_code field with tags support
+    $('#id_zone_code').select2({
+        tags: true,  // Allow creating new tags/values
+        placeholder: "Select or type a zone code",
+        allowClear: true,
+        createTag: function (params) {
+            var term = $.trim(params.term);
+            
+            if (term === '') {
+                return null;
+            }
+            
+            // Return the new tag
+            return {
+                id: term,
+                text: term,
+                newTag: true // Add a flag to indicate this is a new tag
+            }
+        }
+    });
+
+    // Initialize Select2 on zone_name field with tags support
+    $('#id_zone_name').select2({
+        tags: true,  // Allow creating new tags/values
+        placeholder: "Select or type a zone name",
+        allowClear: true,
+        createTag: function (params) {
+            var term = $.trim(params.term);
+            
+            if (term === '') {
+                return null;
+            }
+            
+            // Return the new tag
+            return {
+                id: term,
+                text: term,
+                newTag: true // Add a flag to indicate this is a new tag
+            }
+        }
+    });
+
+    // Clear default selection if not editing
+    $('#id_zone_code').val(null).trigger('change');
+    $('#id_zone_name').val(null).trigger('change');
+});
+</script>
+
+{% endblock %}

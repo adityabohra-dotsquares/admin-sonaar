@@ -1,0 +1,21 @@
+{% extends "adminuser/_template.html" %}
+
+{% block content %}
+<div class="container-fluidd px-4">
+<div class="email-form">
+<h5 class="page-title">{{ title }}</h5>
+<style>
+#id_body_html {
+    height: 500px;
+    overflow-y: scroll;
+}
+</style>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a href="{% url 'email_template_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+</div>
+</div>
+{% endblock %}

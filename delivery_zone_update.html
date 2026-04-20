@@ -1,0 +1,134 @@
+{% extends "adminuser/_template.html" %}
+{% block content %}
+
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<style>
+  /* .select2-container {
+    width: 100% !important;
+  } */
+  .select2-selection {
+    height: auto !important;
+    min-height: 38px !important;
+  }
+  .select2-container--default .select2-selection--single {
+    border: 1px solid var(--lightgray) !important;
+        height: 48px !important;
+}
+.select2-container--default .select2-selection--single .select2-selection__clear {
+    height: 45px;
+}
+span.select2.select2-container.select2-container--default {
+    border: none;
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 48px;
+}
+</style>
+
+
+<div class="container-fluid px-4" style="margin-top: 80px;">
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+        <h5 class="page-title">Update Delivery Zone</h5>
+        <div>
+        <a href="{% url 'delivery_zone_list_form' %}" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<form method="post">
+  {% csrf_token %}
+  <!-- Hidden field for UUID is usually handled by form initialization or explicit input, 
+       but here we rely on the URL providing ID or the form field 'uuid'.
+       DeliveryZoneForm typically has 'uuid' field if is_edit=True and initial data is passed. 
+       Let's ensure it's rendered or handled. -->
+  {{ form.uuid }} 
+  <div class="card mb-4">
+    <div class="card-body rate-card">
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <label>{{ form.zone_code.label }}</label>
+          {{ form.zone_code }}
+          <small class="form-text text-muted">{{ form.zone_code.help_text }}</small>
+        </div>
+        <div class="col-md-6 mb-4">
+          <label>{{ form.zone_name.label }}</label>
+          {{ form.zone_name }}
+        </div>
+        <div class="col-md-12 d-flex">
+          <div class="form-check">
+            {{ form.is_active }}
+            <label class="form-check-label">{{ form.is_active.label }}</label>
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary mt-3">
+        Update Zone
+      </button>
+      <a href="{% url 'delivery_zone_list_form' %}" class="btn btn-secondary mt-3">Cancel</a>
+    </div>
+  </div>
+</form>
+
+</div>
+
+<script>
+$(document).ready(function() {
+    // Initialize Select2
+    $('#id_zone_code').select2({
+        tags: true, 
+        placeholder: "Select or type a zone code",
+        allowClear: true,
+        createTag: function (params) {
+            var term = $.trim(params.term);
+            if (term === '') return null;
+            return { id: term, text: term, newTag: true }
+        }
+    });
+
+    $('#id_zone_name').select2({
+        tags: true, 
+        placeholder: "Select or type a zone name",
+        allowClear: true,
+        createTag: function (params) {
+            var term = $.trim(params.term);
+            if (term === '') return null;
+            return { id: term, text: term, newTag: true }
+        }
+    });
+
+    // For Edit, ensure values are selected if they are custom/new
+    // We can rely on Django form initial values rendering <option selected> for standard fields,
+    // but for Select2 with tags, we might need JS helper if value isn't in predefined options.
+    
+    // In Django forms, if choices are dynamic or not matching, value might not render as selected option.
+    // However, if we populate choices in form init, it should work.
+    // If not, we can inject JS similar to list view.
+    
+    var zoneCode = "{{ form.zone_code.value|escapejs }}";
+    if (zoneCode && !$('#id_zone_code').find("option[value='" + zoneCode + "']").length) {
+        var newOption = new Option(zoneCode, zoneCode, true, true);
+        $('#id_zone_code').append(newOption).trigger('change');
+    }
+    
+    var zoneName = "{{ form.zone_name.value|escapejs }}";
+    if (zoneName && !$('#id_zone_name').find("option[value='" + zoneName + "']").length) {
+        var newOptionName = new Option(zoneName, zoneName, true, true);
+        $('#id_zone_name').append(newOptionName).trigger('change');
+    }
+});
+</script>
+
+{% endblock %}

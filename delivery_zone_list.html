@@ -1,0 +1,183 @@
+{% extends "adminuser/_template.html" %}
+{% block search %}
+       <form class="d-none d-md-flex ms-3 w-30">
+            <div class="input-group rounded-pill">
+              <span class="input-group-text bg-white border-end-0 rounded-pill-start">
+                <i class="bi bi-search"></i>
+              </span>
+              <input class="form-control form-control-sm border-start-0 rounded-pill-end" type="search" value="{{ request.GET.searchbar }}"
+                placeholder="Search here"  name="searchbar" aria-label="Search">
+            </div>
+          </form> 
+{% endblock search %}
+{% block content %}
+
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<style>
+  .select2-container {
+    width: 100% !important;
+  }
+  .select2-selection {
+    height: auto !important;
+    min-height: 38px !important;
+  }
+</style>
+
+{% if confirm_delete %}
+<div class="modal fade show" style="display: block;" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title">Confirm Delete</h5>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to permanently delete:</p>
+        <strong>{{ confirm_delete.zone_code }} - {{ confirm_delete.zone_name }}</strong>?
+        <p class="text-muted mt-2">This action cannot be undone.</p>
+      </div>
+      <div class="modal-footer">
+        <a href="{% url 'delivery_zone_list_form' %}" class="btn btn-secondary">Cancel</a>
+        <form method="post" style="display: inline;">
+          {% csrf_token %}
+          {% comment %} <input type="hidden" name="zone_code" value="{{ confirm_delete.zone_code }}"> {% endcomment %}
+          <input type="hidden" name="id" value="{{ confirm_delete.id }}">
+          <button type="submit" name="delete_zone" class="btn btn-danger">Delete Permanently</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade show"></div>
+{% endif %}
+
+<div class="container-fluidd px-4">
+  <div class="d-flex justify-content-between flex-wrap align-items-center mt-4 mb-3">
+        <h5 class="page-title">Delivery Zones</h5>
+        <div class="d-flex flex-wrap gap-2">
+        <a href="{% url 'delivery_zone_create' %}" class="btn btn-primary">Create New Zone</a>
+        <a href="{% url 'zones_import' %}" class="btn btn-primary">Import Zones</a>
+        <a href="{% url 'zone_export' %}" class="btn btn-secondary">
+            <i class="bi bi-download me-1"></i> Zone Template
+        </a>
+        </div>
+    </div>
+<!-- Form for Create / Edit -->
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+<div class="card table-card mb-4">
+<div class="card-body">
+<div class="table-responsive">
+<!-- List of Zones -->
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Code</th>
+      <th>Name</th>
+      <th>Active</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for zone in zones_list %}
+    <tr>
+      <td>{{ zone.zone_code }}</td>
+      <td>{{ zone.zone_name }}</td>
+      <td>{{ zone.is_active|yesno:"Yes,No" }}</td>
+      <td>
+        <a href="{% url 'delivery_zone_update' zone.id %}" class="btn btn-sm btn-primary mb-2">Edit</a>
+        <form method="post" action="{% url 'delivery_zone_delete' zone.id %}" style="display: inline;">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-sm btn-danger mb-2">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4">No delivery zones found.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+{% include 'adminuser/_pagination.html' with  url_name='delivery_zone_list_form' %}
+<script>
+$(document).ready(function() {
+    // Initialize Select2 on zone_code field with tags support
+    $('#id_zone_code').select2({
+        tags: true,  // Allow creating new tags/values
+        placeholder: "Select or type a zone code",
+        allowClear: true,
+        createTag: function (params) {
+            var term = $.trim(params.term);
+            
+            if (term === '') {
+                return null;
+            }
+            
+            // Return the new tag
+            return {
+                id: term,
+                text: term,
+                newTag: true // Add a flag to indicate this is a new tag
+            }
+        }
+    });
+
+    // Initialize Select2 on zone_name field with tags support
+    $('#id_zone_name').select2({
+        tags: true,  // Allow creating new tags/values
+        placeholder: "Select or type a zone name",
+        allowClear: true,
+        createTag: function (params) {
+            var term = $.trim(params.term);
+            
+            if (term === '') {
+                return null;
+            }
+            
+            // Return the new tag
+            return {
+                id: term,
+                text: term,
+                newTag: true // Add a flag to indicate this is a new tag
+            }
+        }
+    });
+
+    // Clear default selection if not editing (prevent default "first item" selection)
+    $('#id_zone_code').val(null).trigger('change');
+    $('#id_zone_name').val(null).trigger('change');
+    // If editing, ensure the value is selected (even if custom tag)
+    var zoneCode = "{{ editing_zone.zone_code|escapejs }}";
+    if ($('#id_zone_code').find("option[value='" + zoneCode + "']").length) {
+        $('#id_zone_code').val(zoneCode).trigger('change');
+    } else { 
+        var newOption = new Option(zoneCode, zoneCode, true, true);
+        $('#id_zone_code').append(newOption).trigger('change');
+    }
+
+    var zoneName = "{{ editing_zone.zone_name|escapejs }}";
+    if ($('#id_zone_name').find("option[value='" + zoneName + "']").length) {
+         $('#id_zone_name').val(zoneName).trigger('change');
+    } else {
+        var newOptionName = new Option(zoneName, zoneName, true, true);
+        $('#id_zone_name').append(newOptionName).trigger('change');
+    }
+ 
+});
+</script>
+
+{% endblock %}

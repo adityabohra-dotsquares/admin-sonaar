@@ -1,0 +1,86 @@
+{% extends "adminuser/_template.html" %}
+{% load static %}
+{% block title %}Edit Product{% endblock %}
+
+{% block content %}
+
+
+
+
+
+<style>
+    .select2 {
+        width: 400px
+    }
+
+    .remove-variant {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .variant-block {
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+        position: relative;
+    }
+
+    .remove-attribute {
+        margin-left: 8px;
+        background: #dc3545;
+        color: white;
+        border: none;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+    }
+</style>
+
+<!-- Main Content -->
+  <!-- Page Content -->
+    <!-- Main content -->
+    <div class="container-fluid p-4">
+      <h5 class="page-title pb-4">Edit Category</h5>
+
+
+ <form method="post" class="needs-validation" novalidate enctype="multipart/form-data">
+                {% csrf_token %}
+                {%if errors%}
+                 <div class="alert alert-danger">{{errors}}</div>
+                 {%endif%}
+                {% include 'adminuser/product/_product_form.html'%}
+        <button type="submit" class="red-btn" style="margin-top: 20px;" >Update Product</button>
+      </form>
+
+    </div>
+    <!-- /Main Content -->
+
+
+
+
+
+{% include 'adminuser/product/_product.js.html' %}
+
+{% include 'adminuser/product/select2_edit.js.html' %}
+
+{% include 'adminuser/product/variantmanagement.js.html' %}
+
+{% include 'adminuser/product/variant_refill.js.html' %}
+
+
+{% endblock %}
+
+
+
+

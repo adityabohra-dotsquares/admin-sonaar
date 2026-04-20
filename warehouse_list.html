@@ -1,0 +1,124 @@
+{% extends "adminuser/_template.html" %}
+{% load product_extras %}
+{% block content %}
+
+<div class="container-fluidd px-4">
+<div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+        <h5 class="page-title">Warehouse</h5>
+    </div>
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+<form method="post">
+  {% csrf_token %}
+  {{ form.uuid }}  <!-- hidden when editing -->
+
+  <div class="card mb-4">
+    <div class="card-header">
+      {{ editing_warehouse|yesno:"Edit Warehouse,Create New Warehouse" }}
+    </div>
+    <div class="card-body">
+      <div class="row">
+<div class="col-md-4 mb-4">
+    <label>Name</label>
+    {{ form.name }}
+    <small class="text-muted d-block mt-1" id="product-help">{{ form.name.help_text }}</small>
+    <div id="product-response" class="mt-1"></div>
+</div>
+<div class="col-md-4 mb-4">
+    <label>Location</label>
+    {{ form.location }}
+    <small class="text-muted d-block mt-1" id="product-help">{{ form.location.help_text }}</small>
+    <div id="product-response" class="mt-1"></div>
+</div>
+
+
+        {% comment %} <div class="col-md-4">
+          <label>Is Active</label>
+          {{ form.is_active }}
+          <small class="text-muted">{{ form.is_active.help_text }}</small>
+        </div> {% endcomment %}
+      </div>
+      <button type="submit" class="btn btn-primary mt-3">
+        {{ editing_warehouse|yesno:"Update,Create" }} Warehouse
+      </button>
+      {% if editing_warehouse %}
+        <a href="{% url 'warehouse_list_form' %}" class="btn btn-secondary mt-3">Cancel</a>
+      {% endif %}
+    </div>
+  </div>
+</form>
+<div class="table-responsive">
+<table class="table table-striped">
+  <thead>
+    <tr>  
+      <th>Name</th>
+      <th>Location</th>
+      {% comment %} <th>Actions</th> {% endcomment %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for warehouse in warehouses %}
+    <tr>
+      <td>{{ warehouse.name }}</td>
+      <td>{{ warehouse.location }}</td>
+      {% comment %} <td>
+        <a href="?edit={{ warehouse.id }}" class="btn btn-sm btn-primary">Edit</a>
+      </td> {% endcomment %}
+    </tr>
+    {% empty %}
+    <tr><td colspan="2">No warehouses configured.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+</div>
+<script>
+    $('.select2Product').select2({
+        placeholder: "Select Product",
+        ajax: {
+            url: "{% product_domain %}/api/v1/product/search",
+            dataType: "json",
+            delay: 250,
+
+            data: function (params) {
+                return {
+                    q: params.term || null,
+                    page: params.page || 1,
+                    limit: 5
+                };
+            },
+
+            processResults: function (data, params) {
+                params.page = params.page || 1;
+
+                return {
+                    results: data.results.map(function (item) {
+                        return {
+                            id: item.id,
+                            text: item.name
+                        };
+                    }),
+
+                    pagination: {
+                        more: data.page < data.pages    // 👈 lazy load next page
+                    }
+                };
+            }
+        }
+    });
+      $('.select2Product').on('select2:select', function (e) {
+        const selectedData = e.params.data;
+        console.log('Selected Category ID:', selectedData.id);
+        console.log('Selected Category Full Name:', selectedData.text);
+
+        // Example: put the name into a hidden input or display somewhere
+        $('#selectedProductName').val(selectedData.text);
+    });
+</script>
+</script>
+{% endblock content %}

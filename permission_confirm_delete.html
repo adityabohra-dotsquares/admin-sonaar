@@ -1,0 +1,34 @@
+{% extends "adminuser/_template.html" %}
+
+{% block title %}Delete Permission{% endblock title %}
+
+{% block content %}
+<div class="container py-5 mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-5">
+            <div class="card shadow border-0">
+                <div class="card-body text-center p-5">
+                    <div class="mb-4">
+                        <i class="bi bi-exclamation-triangle-fill text-danger fs-1"></i>
+                    </div>
+                    <h3 class="fw-bold mb-3">Delete Permission?</h3>
+                    <p class="text-muted mb-4">
+                        Are you sure you want to delete the permission <br>
+                        <code class="text-primary fs-5">{{ permission.code }}</code>?
+                    </p>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-lg btn-danger">
+                                Yes, Delete Permission
+                            </button>
+                            <a href="{% url 'permission_list' %}" class="btn btn-link text-muted">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,34 @@
+{% extends "adminuser/_template.html" %}
+{% load static %}
+{% block title %}Create Category{% endblock %}
+{% block content %}
+
+
+{% include 'adminuser/category/_category_form.html'%}
+
+<div class="text-center  mt-3 pb-3">
+  © <span id="year"></span> ShopperBeats. All rights reserved.
+</div>
+
+
+<script>
+      (() => {
+        'use strict'
+
+        const form = document.querySelector('.needs-validation')
+        form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+
+            form.classList.add('was-validated')
+
+            
+        }, false)
+    })()
+    
+</script>
+{% include 'adminuser/category/_category.js.html'%}
+
+{% endblock content %}

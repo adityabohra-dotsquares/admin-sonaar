@@ -1,0 +1,182 @@
+{% extends 'adminuser/_template.html' %}
+{% block title %}Brands{% endblock %}
+
+{% block content %}
+<!-- Main Content -->
+<div class="container-fluidd px-4">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center mt-4 mb-3">
+        <h5 class="page-title">Brands</h5>
+        <div class="d-flex flex-wrap gap-2 align-items-center">
+            <form method="get" action="{% url 'brand_list' %}" class="d-flex gap-2">
+                <div class="search-panel d-flex">
+                    <input type="text" name="q" class="form-control" placeholder="Search brands..."
+                        value="{{ request.GET.q|default:'' }}">
+                    <button type="submit" class="btn btn-danger px-4"><i class="bi bi-search"></i></button>
+                </div>
+                {% if request.GET.q %}
+                <a href="{% url 'brand_list' %}" class="btn btn-outline-secondary">Reset</a>
+                {% endif %}
+            </form>
+            <a href="{% url 'brand_import' %}" class="blue-btn">Import Brands</a>
+            <a href="{% url 'brand_template_download' %}" class="blue-btn">Download Template</a>
+            <a href="{% url 'brand_export' %}" class="blue-btn">Export Brands</a>
+            <a href="{% url 'brand_add' %}" class="red-btn">Add Brand</a>
+        </div>
+    </div>
+
+    <!-- Flash messages -->
+    {% if messages %}
+    <div class="mb-3">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Vendors Table -->
+    <div class="card table-card mb-4">
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="table align-middle table-striped-custom">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Banner Image</th>
+                            <th>Logo Image</th>
+                            <th>Products</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% if response.data %}
+                        {% for brand in response.data %}
+                        <tr>
+                            <td>
+                                <a href="{% url  'brand_details' brand.id  %}"
+                                    class="text-decoration-none text-dark fw-semibold">
+                                    {{ brand.name }}
+                                </a>
+                            </td>
+                            <td>
+                                {% if brand.image_url %}
+                                <img src="{{ brand.image_url }}" alt="{{ brand.name }}" class="img-fluid mb-3"
+                                    style="height: 35px; object-fit: contain;">
+                                {% else %}
+                                <div class="d-flex align-items-center justify-content-center bg-light mb-3 rounded"
+                                    style="height:35px;width:35px;">
+                                    <i class="bi bi-image text-muted fs-2"></i>
+                                </div>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if brand.logo_url %}
+                                <img src="{{ brand.logo_url }}" alt="{{ brand.name }}" class="img-fluid mb-3"
+                                    style="height: 35px; object-fit: contain;">
+                                {% else %}
+                                <div class="d-flex align-items-center justify-content-center bg-light mb-3 rounded"
+                                    style="height:35px;width:35px;">
+                                    <i class="bi bi-image text-muted fs-2"></i>
+                                </div>
+                                {% endif %}
+                            </td>
+                            <td>
+                              <span class="badge bg-secondary">
+                                  {{ brand.total_products|default:"0" }}
+                              </span>
+                            </td>
+                            <td class="action-icon" style="display:flex">
+                                <a href="{% url 'brand_edit' brand.id%}" class="btn btn-sm btn-outline-primary me-1">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
+                                    data-bs-target="#deleteBrandModal" data-brand-id="{{ brand.id }}"
+                                    data-brand-name="{{ brand.name }}">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <div class="alert alert-info mt-3" role="alert">
+                            <i class="bi bi-info-circle me-2"></i>No brands found.
+                        </div>
+                        {% endif %}
+                        <!-- ... other rows remain unchanged ... -->
+
+                    </tbody>
+
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    {% include 'adminuser/_pagination.html' %}
+
+    <!-- Pagination Footer -->
+    <!-- <div class="pagination-footer-container bg-white p-2 rounded-bottom">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+            <nav aria-label="Table navigation">
+                <ul class="pagination pagination-sm mb-2 mb-md-0">
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">4</a></li>
+                    <li class="page-item"><a class="page-link" href="#">5</a></li>
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                    <li class="page-item"><a class="page-link" href="#">24</a></li>
+                </ul>
+            </nav>
+            <p>Showing 8 per page — Total 69 items</p>
+        </div>
+    </div> -->
+
+    <!-- Footer -->
+
+
+</div>
+<div class="text-center  mt-3 pb-3">
+    © <span id="year"></span> ShopperBeats. All rights reserved.
+</div>
+<!-- /Main Content -->
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteBrandModal" tabindex="-1" aria-labelledby="deleteBrandModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteBrandModalLabel">Delete Brand</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete the brand <strong id="deleteBrandName"></strong>? This action cannot be
+                undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteBrandForm" method="post" action="">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('deleteBrandModal').addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var brandId = button.getAttribute('data-brand-id');
+        var brandName = button.getAttribute('data-brand-name');
+        document.getElementById('deleteBrandName').textContent = brandName;
+        document.getElementById('deleteBrandForm').action = '{% url "brand_list" %}'.replace('brand/list', 'brand/delete/') + brandId;
+    });
+</script>
+{% endblock content %}

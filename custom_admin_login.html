@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% load widget_tweaks %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+  <link rel="stylesheet" href="{% static 'adminuser/css/styles.css'%}">
+
+<div class="d-flex align-items-center justify-content-center min-vh-100 bg-light login-page">
+  <div class="card shadow-sm p-4" style="width: 100%; max-width: 500px;">
+      <img src="{% static 'adminuser/images/dashboard/logo.svg' %}" alt="logo" class="logo-img">
+    <h3 class="text-center mb-4">Login</h3>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+
+      <!-- Email -->
+      <div class="mb-3">
+        {{ form.email.label_tag }}
+        {{ form.email|add_class:"form-control" }}
+        {% if form.email.errors %}
+          <div class="invalid-feedback d-block">{{ form.email.errors }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3">
+        {{ form.password.label_tag }}
+        {{ form.password|add_class:"form-control" }}
+        {% if form.password.errors %}
+          <div class="invalid-feedback d-block">{{ form.password.errors }}</div>
+        {% endif %}
+      </div>
+
+      <div class="text-center mb-3">
+        <a href="{% url 'admin_password_reset' %}" class="text-decoration-none small">Forgot Password?</a>
+       
+      </div>
+       <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

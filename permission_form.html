@@ -1,0 +1,90 @@
+{% extends "adminuser/_template.html" %}
+
+{% block title %}{{ title }}{% endblock title %}
+
+{% block content %}
+<div class="container py-5 mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h4 class="mb-0">{{ title }}</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        
+                        {% for field in form %}
+                        <div class="mb-3">
+                            <label for="{{ field.id_for_label }}" class="form-label fw-bold">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ field.errors|striptags }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-lg red-btn">
+                                Save Permission
+                            </button>
+                            <a href="{% url 'permission_list' %}" class="btn btn-link text-muted mt-2">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-control, select {
+        padding: 10px 12px;
+        border-radius: 8px;
+        border: 1px solid #dee2e6;
+        width: 100%;
+    }
+    .form-control:focus {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+    }
+</style>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+    const moduleActions = {
+        {% for code, label, actions in modules %}
+            "{{ code }}": {{ actions|safe }},
+        {% endfor %}
+    };
+
+    function updateActions() {
+        const moduleSelect = document.querySelector('select[name="module"]');
+        if (!moduleSelect) return;
+        
+        const selectedModule = moduleSelect.value;
+        const allowedActions = moduleActions[selectedModule] || [];
+        
+        const actionCheckboxes = document.querySelectorAll('input[type="checkbox"][name="action"]');
+        actionCheckboxes.forEach(checkbox => {
+            const actionCode = checkbox.value;
+            const container = checkbox.closest('.form-check') || checkbox.closest('li') || checkbox.parentElement;
+            
+            if (allowedActions.includes(actionCode)) {
+                container.style.display = 'block';
+                checkbox.disabled = false;
+            } else {
+                container.style.display = 'none';
+                checkbox.disabled = true;
+                checkbox.checked = false;
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', updateActions);
+    // The onchange is already on the select in forms.py, but let's double check it's fired correctly.
+</script>
+{% endblock scripts %}

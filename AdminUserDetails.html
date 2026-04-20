@@ -1,0 +1,118 @@
+{% extends "adminuser/_template.html" %}
+
+{% block title %}Super Admin Access{% endblock title %}
+
+{% block content %}
+<h4>Hi
+    UNDER Development
+</h4>
+{% load static %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-user-cog"></i> Admin User Details
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <strong>Username:</strong>
+                            <p class="text-muted mb-0">{{ data.admin.username }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <strong>Full Name:</strong>
+                            <p class="text-muted mb-0">
+                                {{ data.admin.first_name }} {{ data.admin.last_name }}
+                                {% if not data.admin.first_name and not data.admin.last_name %}
+                                    <em class="text-secondary">Not provided</em>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <strong>Email:</strong>
+                            <p class="text-muted mb-0">
+                                {{ data.admin.email|default:"<em>Not provided</em>" }}
+                            </p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <strong>Role:</strong>
+                            <p class="mb-0">
+                                <span class="badge 
+                                    {% if data.admin.role.role == 'ADMIN' %}bg-danger
+                                    {% elif data.admin.role.role == 'MODERATOR' %}bg-warning text-dark
+                                    {% else %}bg-info{% endif %}">
+                                    {{ data.admin.role.get_role_display }}
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <strong>Status:</strong>
+                            <p class="mb-0">
+                                {% if data.admin.is_active %}
+                                    <span class="badge bg-success">Active</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Inactive</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <strong>Date Joined:</strong>
+                            <p class="text-muted mb-0">
+                                {{ data.admin.date_joined|date:"d M Y, H:i" }}
+                            </p>
+                        </div>
+                    </div>
+
+                    {% if data.admin.last_login or data.last_login %}
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <strong>Last Login:</strong>
+                            <p class="text-muted mb-0">
+                                {{ data.admin.last_login|date:"d M Y, H:i"|default:data.last_login|date:"d M Y, H:i" }}
+                            </p>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <strong>Extra Permissions:</strong>
+                            <div class="mt-2">
+                                {% with user_obj=data.admin|default:data %}
+                                    {% if user_obj.extra_permissions.all %}
+                                        {% for perm in user_obj.extra_permissions.all %}
+                                            <span class="badge bg-primary me-1">{{ perm.code }}</span>
+                                        {% endfor %}
+                                    {% else %}
+                                        <span class="text-muted small">None assigned</span>
+                                    {% endif %}
+                                {% endwith %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'adminuser_edit' data.admin.id|default:data.id %}" class="btn btn-outline-primary">
+                            <i class="fas fa-edit"></i> Edit User
+                        </a>
+                        <a href="{% url 'adminuser_list' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to List
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

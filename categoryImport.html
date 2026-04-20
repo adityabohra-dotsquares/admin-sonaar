@@ -1,0 +1,52 @@
+{% extends "adminuser/_template.html" %}
+{% load static %}
+{% block title %}Import Categories{% endblock %}
+
+{% block content %}
+<div class="container-fluidd px-4">
+    <div class="d-flex flex-wrap mt-2 mb-3 align-items-center justify-content-between">
+        <h5 class="page-title">Import Categories</h5>
+        <a href="{% url 'category_list' %}" class="red-btn">
+            Back to List
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="alert alert-info" role="alert">
+                <h6 class="alert-heading"><i class="bi bi-info-circle-fill me-2"></i>Instructions</h6>
+                <p class="mb-0">Upload a CSV or Excel file to bulk import categories.</p>
+                <hr>
+                <p class="mb-0 small">
+                    <strong>Required Columns:</strong>Category Code, Categories,Image URL,Icon URL<br>
+                    <strong>Supported Formats:</strong> .csv, .xlsx, .xlsb<br>
+                    <strong>Example:</strong><br>
+                    <code>APPL001, Electronics > Smart Phones > iPhone</code>
+                </p>
+            </div>
+
+            <form method="post" enctype="multipart/form-data" class="mt-4">
+                {% csrf_token %}
+                
+                {% if error %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </div>
+                {% endif %}
+
+                <div class="mb-4">
+                    <label for="fileInput" class="form-label fw-bold">Select File</label>
+                    <input class="form-control form-control-lg" type="file" id="fileInput" name="file" accept=".csv, .xlsx, .xlsb" required>
+                    <div class="form-text">Max file size: 10MB</div>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="bi bi-cloud-upload me-2"></i>Start Import
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

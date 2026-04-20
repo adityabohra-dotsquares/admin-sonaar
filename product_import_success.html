@@ -1,0 +1,73 @@
+{% extends "adminuser/_template.html" %}
+
+{% load static %}
+{% block content %}
+<h2>Import Products</h2>
+
+<style>
+    .drop-zone {
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .drop-zone.dragover {
+        border-color: var(--bs-primary);
+        background-color: rgba(13, 110, 253, 0.1) !important;
+        transform: scale(1.02);
+    }
+
+    .hover-bg-primary-subtle:hover {
+        background-color: rgba(13, 110, 253, 0.05) !important;
+    }
+
+    .transition-all {
+        transition: all 0.3s ease;
+    }
+</style>
+<div class="card shadow-sm border-0">
+    <div class="card-body p-5">
+        <h4 class="card-title mb-4 text-dark">
+            <i class="bi bi-cloud-upload me-2"></i>Import Products Status
+        </h4>
+
+        <div class="mb-4">
+            {% if status == "queued" %}
+            <h5>Import is queued. Please check back later.</h5>
+            <div class="mt-4">
+                <a class="red-btn" href="{% url 'import_export_list_tasks' %}">Check Status</a>
+            </div>
+            {% endif %}
+            {% if created_products  %}
+            {% if created_products == 0 %}
+            <h5>No products were added . Template might be wrong</h5>
+            {% else %}
+            <h5>{{created_products}} products were added </h5>
+            <h5>{{created_variants}} variants were added </h5>
+         <div class="mt-4">
+                <a class="red-btn" href="{% url 'product_list' %}?sort_by=newly_added">Product Listing</a>
+            </div>
+            {% endif %}
+            {%endif%}
+            {% if errors %}
+            <h4>These were the errors</h4>
+            <ul>
+                {% for e in errors %}
+                <li>{{e}}</li>
+                {%endfor%}
+            </ul>
+            <div class="row mt-1">
+                <a class="red-btn" href="{% url 'product_import' %}">Retry Upload</a>
+            </div>
+            {%else%}
+
+            {% endif %}
+            {% if detail %}
+            <p>{{detail}}</p>
+            {%endif%}
+
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}

@@ -1,0 +1,236 @@
+{% extends "adminuser/_template.html" %}
+{% load static %}
+{% block title %}Products{% endblock %}
+{% block content %}
+<style>
+    li { list-style: none; }
+    body { font-family: Arial, sans-serif; line-height: 1.5; padding: 20px; }
+    .tree ul { margin: 0; padding-left: 20px; list-style: none; }
+    .tree li { margin: 4px 0; }
+    .caret {
+        cursor: pointer; user-select: none; display: inline-block;
+        width: 0; height: 0; margin-right: 6px;
+        border-left: 5px solid #555; border-top: 4px solid transparent;
+        border-bottom: 4px solid transparent; transition: transform 0.2s;
+    }
+    .caret-down { transform: rotate(90deg); }
+    .node-label { cursor: pointer; display: inline-block; }
+    .leaf { cursor: default; }
+    .product-count { color: #666; font-size: 0.9em; margin-left: 6px; }
+    input[type="checkbox"] { margin-right: 6px; }
+
+    /* Search styles */
+    #category-search {
+        width: 100%; padding: 12px; margin-bottom: 20px;
+        font-size: 16px; border: 1px solid #ccc; border-radius: 6px;
+        box-sizing: border-box;
+    }
+    .highlight { background-color: #fff59d; font-weight: bold; padding: 2px 4px; border-radius: 3px; }
+    .hidden-node { display: none !important; }
+</style>
+
+<div class="container-fluidd p-4">
+    <h5 class="page-title pb-2">Download Import Template</h5>
+
+    <!-- Search Input -->
+    <input type="text" id="category-search" placeholder="Search categories (e.g., mobile, shirt, laptop)..." autocomplete="off">
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="tree">
+            {{ response|json_script:"category-data" }}
+            <ul id="category-tree"></ul>
+        </div>
+        <button class="red-btn mt-3" type="submit">Download</button>
+    </form>
+</div>
+
+<div class="text-center mt-3 pb-3">
+    © <span id="year"></span> ShopperBeats. All rights reserved.
+</div>
+
+<script>
+    (function () {
+        const dataEl = document.getElementById('category-data');
+        const categories = dataEl ? JSON.parse(dataEl.textContent) : [];
+        const treeRoot = document.getElementById('category-tree');
+        const searchInput = document.getElementById('category-search');
+
+        function el(tag, className) {
+            const e = document.createElement(tag);
+            if (className) e.className = className;
+            return e;
+        }
+
+        function escapeHtml(str) {
+            if (str == null) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function buildNode(node) {
+            const li = el('li');
+            li.dataset.name = (node.name || '').toLowerCase();  // Critical for search
+
+            const hasChildren = node.subcategories && node.subcategories.length > 0;
+
+            if (hasChildren) {
+                const caret = el('span', 'caret');
+                if (node.expanded) caret.classList.add('caret-down');
+
+                const label = el('span', 'node-label');
+                label.innerHTML = `${escapeHtml(node.name)} <span class="product-count"></span>`;
+
+                const selectAll = el('span', 'selectAll btn btn-sm');
+                selectAll.textContent = 'Select All';
+
+                li.appendChild(caret);
+                li.appendChild(label);
+                li.appendChild(selectAll);
+
+                const childUl = el('ul');
+                childUl.style.display = node.expanded ? 'block' : 'none';
+
+                node.subcategories.forEach(child => {
+                    childUl.appendChild(buildNode(child));
+                });
+
+                li.appendChild(childUl);
+            } else {
+                // Leaf node
+                li.classList.add('leaf');
+                const label = el('label');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.name = 'category';
+                checkbox.value = node.id;
+
+                label.appendChild(checkbox);
+                label.insertAdjacentHTML('beforeend', ' ' + escapeHtml(node.name));
+                li.appendChild(label);
+            }
+
+            return li;
+        }
+
+        // Build the tree
+        categories.forEach(cat => treeRoot.appendChild(buildNode(cat)));
+
+        // === SEARCH FUNCTIONALITY (FIXED & ROBUST) ===
+        function filterTree(query) {
+            query = query.trim().toLowerCase();
+
+            // Reset all if query is empty
+            if (query === '') {
+                treeRoot.querySelectorAll('li').forEach(li => {
+                    li.classList.remove('hidden-node');
+                });
+                treeRoot.querySelectorAll('.node-label, label').forEach(el => {
+                    el.classList.remove('highlight');
+                });
+                return;
+            }
+
+            const allNodes = treeRoot.querySelectorAll('li');
+
+            allNodes.forEach(li => {
+                const nodeName = li.dataset.name || '';
+                const matchesSelf = nodeName.includes(query);
+
+                // Check if any descendant matches
+                const descendantMatch = li.querySelector(`li[data-name*="${query}"]`);
+                const hasMatchInTree = matchesSelf || !!descendantMatch;
+
+                // Highlight logic
+                const displayElement = li.querySelector('.node-label') || li.querySelector('label');
+                if (displayElement) {
+                    displayElement.classList.toggle('highlight', matchesSelf);
+                }
+
+                // Show/hide node
+                if (hasMatchInTree) {
+                    li.classList.remove('hidden-node');
+
+                    // Expand all parent branches
+                    let parent = li.parentElement;
+                    while (parent && parent.tagName === 'UL') {
+                        parent.style.display = 'block';
+                        const parentLi = parent.parentElement;
+                        if (parentLi) {
+                            const caret = parentLi.querySelector('.caret');
+                            if (caret) caret.classList.add('caret-down');
+                        }
+                        parent = parentLi ? parentLi.parentElement.closest('ul') : null;
+                    }
+                } else {
+                    li.classList.add('hidden-node');
+                }
+            });
+        }
+
+        // Live search
+        searchInput.addEventListener('input', () => filterTree(searchInput.value));
+
+        // Clear on Escape
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                searchInput.value = '';
+                filterTree('');
+            }
+        });
+
+        // Sync Select All buttons on load
+        function syncSelectAllButtons() {
+            document.querySelectorAll('.selectAll').forEach(btn => {
+                const parentLi = btn.closest('li');
+                const checkboxes = parentLi?.querySelectorAll('input[type="checkbox"][name="category"]') || [];
+                if (checkboxes.length === 0) return;
+                const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+                btn.textContent = allChecked ? 'Deselect All' : 'Select All';
+            });
+        }
+        syncSelectAllButtons();
+
+        // === Existing Event Listeners ===
+        document.addEventListener('click', e => {
+            if (e.target.matches('.caret')) {
+                const caret = e.target;
+                const parentLi = caret.closest('li');
+                const childUl = parentLi?.querySelector('ul');
+                caret.classList.toggle('caret-down');
+                if (childUl) childUl.style.display = childUl.style.display === 'none' ? 'block' : 'none';
+            }
+        });
+
+        document.addEventListener('click', e => {
+            if (e.target.matches('.node-label') || e.target.closest('.node-label')) {
+                const label = e.target.matches('.node-label') ? e.target : e.target.closest('.node-label');
+                if (e.target.tagName === 'INPUT') return;
+                const caret = label.parentElement.querySelector('.caret');
+                if (caret) caret.click();
+            }
+        });
+
+        document.addEventListener('click', e => {
+            if (e.target.matches('.selectAll')) {
+                e.stopPropagation();
+                const btn = e.target;
+                const parentLi = btn.closest('li');
+                const checkboxes = parentLi?.querySelectorAll('input[type="checkbox"][name="category"]') || [];
+                if (checkboxes.length === 0) return;
+                const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+                const shouldCheck = !allChecked;
+                checkboxes.forEach(cb => cb.checked = shouldCheck);
+                btn.textContent = shouldCheck ? 'Deselect All' : 'Select All';
+            }
+        });
+
+        treeRoot.dispatchEvent(new Event('categoryTreeBuilt'));
+        document.getElementById('year').textContent = new Date().getFullYear();
+    })();
+</script>
+{% endblock content %}

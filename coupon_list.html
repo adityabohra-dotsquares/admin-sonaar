@@ -1,0 +1,70 @@
+{% extends "adminuser/_template.html" %}
+{% block content %}
+
+<div class="container-fluidd px-4">
+  <div class="d-flex flex-wrap justify-content-between mt-4 mb-3">
+    <h5 class="page-title">Coupon</h5>
+    <a href="{% url 'coupon_create' %}" class="red-btn">Add Coupon</a>
+  </div>
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-{{ message.tags }}" role="alert">
+    {{ message }}
+  </div>
+  {% endfor %}
+  {% endif %}
+  <div class="card mb-4">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Code</th>
+              <th>Discount</th>
+              <th>Status</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for coupon in coupons %}
+            <tr>
+              <td>{{ coupon.name }}</td>
+              <td>{{ coupon.code }}</td>
+              <td>
+                {% if coupon.discount_type == 'percentage' %}
+                {{ coupon.discount_value }}%
+                {% else %}
+                ${{ coupon.discount_value }}
+                {% endif %}
+              </td>
+              <td>
+                <span class="badge {% if coupon.is_active %}bg-success{% else %}bg-secondary{% endif %}">
+                  {% if coupon.is_active %}Active{% else %}Inactive{% endif %}
+                </span>
+              </td>
+              <td>{{ coupon.start_date|slice:":16" }}</td>
+              <td>{{ coupon.end_date|slice:":16" }}</td>
+              <td class="action-icon">
+                <div class="action-wrapper">
+                  <a href="{% url 'coupon_update' coupon.id %}" class="btn btn-sm btn-outline-primary"><i
+                      class="bi bi-pencil"></i></a>
+                  <a href="{% url 'coupon_delete' coupon.id %}" class="btn btn-sm btn-outline-danger"
+                    onclick="return confirm('Are you sure?');"><i class="bi bi-trash"></i></a>
+                </div>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="7" class="text-center">No coupons found.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
