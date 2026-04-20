@@ -20,7 +20,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 SECRET_KEY = env("SECRET_KEY")
 ADMIN_JWT_SECRET = env("ADMIN_JWT_SECRET")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG", "true") == "true"
 SITE_ID = 1
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
 
