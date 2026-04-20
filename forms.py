@@ -38,64 +38,62 @@ ROLE_CHOICES = (
 
 # Define zone code choices
 ZONE_CODE_CHOICES = [
-    ('ACT', 'ACT'),
-    ('NSW_M', 'NSW_M'),
-    ('NSW_R', 'NSW_R'),
-    ('NT_M', 'NT_M'),
-    ('QLD_M', 'QLD_M'),
-    ('QLD_R', 'QLD_R'),
-    ('REMOTE', 'REMOTE'),
-    ('SA_M', 'SA_M'),
-    ('SA_R', 'SA_R'),
-    ('TAS_M', 'TAS_M'),
-    ('TAS_R', 'TAS_R'),
-    ('VIC_M', 'VIC_M'),
-    ('VIC_R', 'VIC_R'),
-    ('WA_M', 'WA_M'),
-    ('WA_R', 'WA_R'),
+    ("ACT", "ACT"),
+    ("NSW_M", "NSW_M"),
+    ("NSW_R", "NSW_R"),
+    ("NT_M", "NT_M"),
+    ("QLD_M", "QLD_M"),
+    ("QLD_R", "QLD_R"),
+    ("REMOTE", "REMOTE"),
+    ("SA_M", "SA_M"),
+    ("SA_R", "SA_R"),
+    ("TAS_M", "TAS_M"),
+    ("TAS_R", "TAS_R"),
+    ("VIC_M", "VIC_M"),
+    ("VIC_R", "VIC_R"),
+    ("WA_M", "WA_M"),
+    ("WA_R", "WA_R"),
 ]
 
 
-POST_CODE_CHOICES=[
-    (post_code, post_code) for post_code in POST_CODES
-]
+POST_CODE_CHOICES = [(post_code, post_code) for post_code in POST_CODES]
 
 # Define zone name choices
 ZONE_NAME_CHOICES = [
-    ('Adelaide', 'Adelaide'),
-    ('Australian Antarctic Territory', 'Australian Antarctic Territory'),
-    ('Ballarat', 'Ballarat'),
-    ('Brisbane', 'Brisbane'),
-    ('Canberra', 'Canberra'),
-    ('Christmas Island', 'Christmas Island'),
-    ('Cocos Islands', 'Cocos Islands'),
-    ('Coolangatta', 'Coolangatta'),
-    ('Geelong', 'Geelong'),
-    ('Gold Coast', 'Gold Coast'),
-    ('Gosford', 'Gosford'),
-    ('Ipswich', 'Ipswich'),
-    ('Melbourne', 'Melbourne'),
-    ('Newcastle', 'Newcastle'),
-    ('Norfolk Island', 'Norfolk Island'),
-    ('NSW Country North', 'NSW Country North'),
-    ('NSW Country South', 'NSW Country South'),
-    ('NT Far Country', 'NT Far Country'),
-    ('NT Near Country', 'NT Near Country'),
-    ('Perth', 'Perth'),
-    ('QLD Far Country', 'QLD Far Country'),
-    ('QLD Mid Country', 'QLD Mid Country'),
-    ('QLD Near Country', 'QLD Near Country'),
-    ('SA Country', 'SA Country'),
-    ('Sunshine Coast', 'Sunshine Coast'),
-    ('Sydney', 'Sydney'),
-    ('Tasmania Country', 'Tasmania Country'),
-    ('Tasmania Metro', 'Tasmania Metro'),
-    ('Tweed Heads', 'Tweed Heads'),
-    ('VIC Far Country', 'VIC Far Country'),
-    ('VIC Near Country', 'VIC Near Country'),
-    ('WA Far Country', 'WA Far Country'),
-    ('WA Near Country', 'WA Near Country'),
-    ('Wollongong', 'Wollongong'),
+    ("Adelaide", "Adelaide"),
+    ("Australian Antarctic Territory", "Australian Antarctic Territory"),
+    ("Ballarat", "Ballarat"),
+    ("Brisbane", "Brisbane"),
+    ("Canberra", "Canberra"),
+    ("Christmas Island", "Christmas Island"),
+    ("Cocos Islands", "Cocos Islands"),
+    ("Coolangatta", "Coolangatta"),
+    ("Geelong", "Geelong"),
+    ("Gold Coast", "Gold Coast"),
+    ("Gosford", "Gosford"),
+    ("Ipswich", "Ipswich"),
+    ("Melbourne", "Melbourne"),
+    ("Newcastle", "Newcastle"),
+    ("Norfolk Island", "Norfolk Island"),
+    ("NSW Country North", "NSW Country North"),
+    ("NSW Country South", "NSW Country South"),
+    ("NT Far Country", "NT Far Country"),
+    ("NT Near Country", "NT Near Country"),
+    ("Perth", "Perth"),
+    ("QLD Far Country", "QLD Far Country"),
+    ("QLD Mid Country", "QLD Mid Country"),
+    ("QLD Near Country", "QLD Near Country"),
+    ("SA Country", "SA Country"),
+    ("Sunshine Coast", "Sunshine Coast"),
+    ("Sydney", "Sydney"),
+    ("Tasmania Country", "Tasmania Country"),
+    ("Tasmania Metro", "Tasmania Metro"),
+    ("Tweed Heads", "Tweed Heads"),
+    ("VIC Far Country", "VIC Far Country"),
+    ("VIC Near Country", "VIC Near Country"),
+    ("WA Far Country", "WA Far Country"),
+    ("WA Near Country", "WA Near Country"),
+    ("Wollongong", "Wollongong"),
 ]
 
 # Example choices for categories; replace with your actual categories
@@ -104,8 +102,6 @@ CATEGORY_CHOICES = [
     ("cat2", "Category 2"),
     ("cat3", "Category 3"),
 ]
-
-
 
 
 class CustomAdminLoginForm(forms.Form):
@@ -238,7 +234,6 @@ class AdminRolesForm(forms.ModelForm):
         return role
 
 
-
 from adminuser.constants import MODULES
 
 # Extract (value, label) for ChoiceField
@@ -248,7 +243,9 @@ MODULE_CHOICES = [(m[0], m[1]) for m in MODULES]
 class AdminPermissionForm(forms.ModelForm):
     module = forms.ChoiceField(
         choices=MODULE_CHOICES,
-        widget=forms.Select(attrs={"class": "form-select", "onchange": "updateActions()"}),
+        widget=forms.Select(
+            attrs={"class": "form-select", "onchange": "updateActions()"}
+        ),
     )
     action = forms.MultipleChoiceField(
         choices=ACTIONS,
@@ -518,23 +515,26 @@ class ProductForm(forms.Form):
     #     required=False,
     # )
     videos = forms.CharField(
-        widget=forms.TextInput(attrs={
-            "class": "form-control",
-            "pattern": r"^(?:\s*(https?:\/\/[^\s,]+)\s*(?:,\s*(https?:\/\/[^\s,]+)\s*)*)?$",
-            "title": "Enter valid URLs separated by commas (http:// or https:// required, spaces around commas allowed)",
-            "placeholder": "http://example.com/video.mp4, https://example.com/another.mp4"
-        }),
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "pattern": r"^(?:\s*(https?:\/\/[^\s,]+)\s*(?:,\s*(https?:\/\/[^\s,]+)\s*)*)?$",
+                "title": "Enter valid URLs separated by commas (http:// or https:// required, spaces around commas allowed)",
+                "placeholder": "https://example.com/video.mp4, https://example.com/another.mp4",
+            }
+        ),
         required=False,
     )
+
     def clean_videos(self):
-        value = self.cleaned_data.get('videos')
-        
+        value = self.cleaned_data.get("videos")
+
         # If field is empty or just whitespace, it's allowed (required=False)
         if not value or not value.strip():
             return value
 
         url_validator = URLValidator()
-        urls = [url.strip() for url in value.split(',') if url.strip()]
+        urls = [url.strip() for url in value.split(",") if url.strip()]
 
         if not urls:
             return value  # Only commas or spaces — still valid empty case
@@ -546,8 +546,8 @@ class ProductForm(forms.Form):
                 raise ValidationError(f'"{url}" is not a valid URL.')
 
         # Optionally normalize the output (remove extra spaces, consistent commas)
-        return ', '.join(urls)
-        
+        return ", ".join(urls)
+
         # return value  # Return original input to preserve user's formatting
 
     price = forms.DecimalField(
@@ -555,32 +555,32 @@ class ProductForm(forms.Form):
         required=False,
         max_digits=10,
         decimal_places=2,
-       widget=forms.TextInput(
-        attrs={
-            "inputmode": "decimal",
-            "pattern": r"^\d{1,8}(\.\d{1,2})?$",  # Allows up to 8 digits before decimal, 2 after (adjust as needed for max_digits=10)
-            "title": "Enter a valid price (e.g., 123.45), up to 2 decimal places",
-            "class": "form-control price",
-            "placeholder": "0.00",  # Optional: Guides user input
-            "onkeypress": "return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46"  # JS to allow only 0-9 and '.' (decimal point)
-        }
-    ),
+        widget=forms.TextInput(
+            attrs={
+                "inputmode": "decimal",
+                "pattern": r"^\d{1,8}(\.\d{1,2})?$",  # Allows up to 8 digits before decimal, 2 after (adjust as needed for max_digits=10)
+                "title": "Enter a valid price (e.g., 123.45), up to 2 decimal places",
+                "class": "form-control price",
+                "placeholder": "0.00",  # Optional: Guides user input
+                "onkeypress": "return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46",  # JS to allow only 0-9 and '.' (decimal point)
+            }
+        ),
     )
     cost_price = forms.DecimalField(
         min_value=0.00,
         required=False,
         max_digits=10,
         decimal_places=2,
-       widget=forms.TextInput(
-        attrs={
-            "inputmode": "decimal",
-            "pattern": r"^\d{1,8}(\.\d{1,2})?$",  # Allows up to 8 digits before decimal, 2 after (adjust as needed for max_digits=10)
-            "title": "Enter a valid price (e.g., 123.45), up to 2 decimal places",
-            "class": "form-control cost_price",
-            "placeholder": "0.00",  # Optional: Guides user input
-            "onkeypress": "return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46"  # JS to allow only 0-9 and '.' (decimal point)
-        }
-    ),
+        widget=forms.TextInput(
+            attrs={
+                "inputmode": "decimal",
+                "pattern": r"^\d{1,8}(\.\d{1,2})?$",  # Allows up to 8 digits before decimal, 2 after (adjust as needed for max_digits=10)
+                "title": "Enter a valid price (e.g., 123.45), up to 2 decimal places",
+                "class": "form-control cost_price",
+                "placeholder": "0.00",  # Optional: Guides user input
+                "onkeypress": "return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46",  # JS to allow only 0-9 and '.' (decimal point)
+            }
+        ),
     )
     rrp_price = forms.DecimalField(
         label="Compare-at price",
@@ -588,16 +588,16 @@ class ProductForm(forms.Form):
         required=False,
         max_digits=10,
         decimal_places=2,
-              widget=forms.TextInput(
-        attrs={
-            "inputmode": "decimal",
-            "pattern": r"^\d{1,8}(\.\d{1,2})?$",  # Allows up to 8 digits before decimal, 2 after (adjust as needed for max_digits=10)
-            "title": "Enter a valid price (e.g., 123.45), up to 2 decimal places",
-            "class": "form-control rrp_price",
-            "placeholder": "0.00",  # Optional: Guides user input
-            "onkeypress": "return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46"  # JS to allow only 0-9 and '.' (decimal point)
-        }
-    ),
+        widget=forms.TextInput(
+            attrs={
+                "inputmode": "decimal",
+                "pattern": r"^\d{1,8}(\.\d{1,2})?$",  # Allows up to 8 digits before decimal, 2 after (adjust as needed for max_digits=10)
+                "title": "Enter a valid price (e.g., 123.45), up to 2 decimal places",
+                "class": "form-control rrp_price",
+                "placeholder": "0.00",  # Optional: Guides user input
+                "onkeypress": "return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46",  # JS to allow only 0-9 and '.' (decimal point)
+            }
+        ),
     )
     status = forms.ChoiceField(
         choices=[
@@ -619,7 +619,8 @@ class ProductForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                "class": "form-control","hidden": "hidden",
+                "class": "form-control",
+                "hidden": "hidden",
             }
         ),
     )
@@ -629,20 +630,18 @@ class ProductForm(forms.Form):
         required=False,
         max_digits=10,
         decimal_places=2,
-              widget=forms.TextInput(
-        attrs={
-            "inputmode": "decimal",
-            "pattern": r"^\d{1,8}(\.\d{1,2})?$",  # Allows up to 8 digits before decimal, 2 after (adjust as needed for max_digits=10)
-            "title": "Enter a valid price (e.g., 123.45), up to 2 decimal places",
-            "class": "form-control rrp_price",
-            "placeholder": "0.00",  # Optional: Guides user input
-            "onkeypress": "return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46"  # JS to allow only 0-9 and '.' (decimal point)
-        }
-    ),
+        widget=forms.TextInput(
+            attrs={
+                "inputmode": "decimal",
+                "pattern": r"^\d{1,8}(\.\d{1,2})?$",  # Allows up to 8 digits before decimal, 2 after (adjust as needed for max_digits=10)
+                "title": "Enter a valid price (e.g., 123.45), up to 2 decimal places",
+                "class": "form-control rrp_price",
+                "placeholder": "0.00",  # Optional: Guides user input
+                "onkeypress": "return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46",  # JS to allow only 0-9 and '.' (decimal point)
+            }
+        ),
     )
 
-
-    
     supplier = forms.CharField(
         max_length=255,
         required=False,
@@ -673,13 +672,14 @@ class ProductForm(forms.Form):
         widget=forms.Textarea(attrs={"rows": 3}), required=False
     )
     images = forms.FileField(
-        widget=MultipleFileInput(attrs={"multiple": True,
-         "accept": "image/jpeg,image/png,.jpg,.jpeg,.png"
-         }),
+        widget=MultipleFileInput(
+            attrs={"multiple": True, "accept": "image/jpeg,image/png,.jpg,.jpeg,.png"}
+        ),
         required=False,
-        validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])],  # Server-side restriction
+        validators=[
+            FileExtensionValidator(allowed_extensions=["jpg", "jpeg", "png"])
+        ],  # Server-side restriction
     )
-
 
     precautionary_note = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 3}), required=False
@@ -689,17 +689,17 @@ class ProductForm(forms.Form):
     )
     warranty = forms.CharField(widget=forms.Textarea(attrs={"rows": 3}), required=False)
     SHIPS_FROM_CHOICES = [
-    ('SBAU', 'SBAU'),
-    ('USA', 'USA'),
-    ('China', 'China'),
-    ('Local 3PL', 'Local 3PL'),
-]
+        ("SBAU", "SBAU"),
+        ("USA", "USA"),
+        ("China", "China"),
+        ("Local 3PL", "Local 3PL"),
+    ]
 
     ships_from_location = forms.ChoiceField(
-    choices=SHIPS_FROM_CHOICES,
-    required=True,
-    widget=forms.Select(attrs={"class": "form-control"}),
-)
+        choices=SHIPS_FROM_CHOICES,
+        required=True,
+        widget=forms.Select(attrs={"class": "form-control"}),
+    )
     handling_time_days = forms.IntegerField(
         min_value=1,
         widget=forms.NumberInput(
@@ -718,16 +718,16 @@ class ProductForm(forms.Form):
         required=False,
         max_digits=10,
         decimal_places=2,
-              widget=forms.TextInput(
-        attrs={
-            "inputmode": "decimal",
-            "pattern": r"^\d{1,8}(\.\d{1,2})?$",  # Allows up to 8 digits before decimal, 2 after (adjust as needed for max_digits=10)
-            "title": "Enter a valid price (e.g., 123.45), up to 2 decimal places",
-            "class": "form-control rrp_price",
-            "placeholder": "0.00",  # Optional: Guides user input
-            "onkeypress": "return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46"  # JS to allow only 0-9 and '.' (decimal point)
-        }
-    ),
+        widget=forms.TextInput(
+            attrs={
+                "inputmode": "decimal",
+                "pattern": r"^\d{1,8}(\.\d{1,2})?$",  # Allows up to 8 digits before decimal, 2 after (adjust as needed for max_digits=10)
+                "title": "Enter a valid price (e.g., 123.45), up to 2 decimal places",
+                "class": "form-control rrp_price",
+                "placeholder": "0.00",  # Optional: Guides user input
+                "onkeypress": "return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46",  # JS to allow only 0-9 and '.' (decimal point)
+            }
+        ),
     )
     width = forms.DecimalField(
         label="Width(cm)",
@@ -735,16 +735,16 @@ class ProductForm(forms.Form):
         required=False,
         max_digits=10,
         decimal_places=2,
-              widget=forms.TextInput(
-        attrs={
-            "inputmode": "decimal",
-            "pattern": r"^\d{1,8}(\.\d{1,2})?$",  # Allows up to 8 digits before decimal, 2 after (adjust as needed for max_digits=10)
-            "title": "Enter a valid price (e.g., 123.45), up to 2 decimal places",
-            "class": "form-control rrp_price",
-            "placeholder": "0.00",  # Optional: Guides user input
-            "onkeypress": "return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46"  # JS to allow only 0-9 and '.' (decimal point)
-        }
-    ),
+        widget=forms.TextInput(
+            attrs={
+                "inputmode": "decimal",
+                "pattern": r"^\d{1,8}(\.\d{1,2})?$",  # Allows up to 8 digits before decimal, 2 after (adjust as needed for max_digits=10)
+                "title": "Enter a valid price (e.g., 123.45), up to 2 decimal places",
+                "class": "form-control rrp_price",
+                "placeholder": "0.00",  # Optional: Guides user input
+                "onkeypress": "return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46",  # JS to allow only 0-9 and '.' (decimal point)
+            }
+        ),
     )
 
     height = forms.DecimalField(
@@ -753,16 +753,16 @@ class ProductForm(forms.Form):
         required=False,
         max_digits=10,
         decimal_places=2,
-              widget=forms.TextInput(
-        attrs={
-            "inputmode": "decimal",
-            "pattern": r"^\d{1,8}(\.\d{1,2})?$",  # Allows up to 8 digits before decimal, 2 after (adjust as needed for max_digits=10)
-            "title": "Enter a valid price (e.g., 123.45), up to 2 decimal places",
-            "class": "form-control rrp_price",
-            "placeholder": "0.00",  # Optional: Guides user input
-            "onkeypress": "return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46"  # JS to allow only 0-9 and '.' (decimal point)
-        }
-    ),
+        widget=forms.TextInput(
+            attrs={
+                "inputmode": "decimal",
+                "pattern": r"^\d{1,8}(\.\d{1,2})?$",  # Allows up to 8 digits before decimal, 2 after (adjust as needed for max_digits=10)
+                "title": "Enter a valid price (e.g., 123.45), up to 2 decimal places",
+                "class": "form-control rrp_price",
+                "placeholder": "0.00",  # Optional: Guides user input
+                "onkeypress": "return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46",  # JS to allow only 0-9 and '.' (decimal point)
+            }
+        ),
     )
     page_title = forms.CharField(
         label="Page Title",
@@ -782,7 +782,7 @@ class ProductForm(forms.Form):
         required=False,
         widget=forms.TextInput(attrs={"class": "form-control"}),
     )
-    
+
     url_handle = forms.CharField(
         label="URL Handle",
         max_length=255,
@@ -795,24 +795,28 @@ class ProductForm(forms.Form):
         required=False,
         widget=forms.TextInput(attrs={"class": "form-control"}),
     )
+
     def clean_price(self):
         price = self.cleaned_data.get("price")
         has_variants = self.cleaned_data.get("has_variants")
         if not has_variants and price is None:
             raise ValidationError("Price is required")
         return price
+
     def clean_cost_price(self):
         cost_price = self.cleaned_data.get("cost_price")
         has_variants = self.cleaned_data.get("has_variants")
         if not has_variants and cost_price is None:
             raise ValidationError("Cost price is required")
         return cost_price
+
     def clean_rrp_price(self):
         rrp_price = self.cleaned_data.get("rrp_price")
         has_variants = self.cleaned_data.get("has_variants")
         if not has_variants and rrp_price is None:
             raise ValidationError("RRP price is required")
         return rrp_price
+
     def clean_stock(self):
         stock = self.cleaned_data.get("stock")
         has_variants = self.cleaned_data.get("has_variants")
@@ -832,15 +836,19 @@ class BrandCreateForm(forms.Form):
     logo_image = forms.FileField(
         required=False,
         label="Logo Image",
-        widget=forms.ClearableFileInput(attrs={"accept": "image/jpeg,image/png,.jpg,.jpeg,.png"}),
-        validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])],
+        widget=forms.ClearableFileInput(
+            attrs={"accept": "image/jpeg,image/png,.jpg,.jpeg,.png"}
+        ),
+        validators=[FileExtensionValidator(allowed_extensions=["jpg", "jpeg", "png"])],
     )
 
     banner_image = forms.FileField(
         required=False,
         label="Banner Image",
-        widget=forms.ClearableFileInput(attrs={"accept": "image/jpeg,image/png,.jpg,.jpeg,.png"}),
-        validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])],
+        widget=forms.ClearableFileInput(
+            attrs={"accept": "image/jpeg,image/png,.jpg,.jpeg,.png"}
+        ),
+        validators=[FileExtensionValidator(allowed_extensions=["jpg", "jpeg", "png"])],
     )
 
 
@@ -861,32 +869,37 @@ class CategoryForm(forms.Form):
             attrs={"placeholder": "Enter category code", "class": "form-control"}
         ),
     )
-    parent_id = forms.CharField(required=False, widget=forms.Select(attrs={"class": "select2"}))
+    parent_id = forms.CharField(
+        required=False, widget=forms.Select(attrs={"class": "select2"})
+    )
     image = forms.ImageField(  # Logo image
         label="Category Image (Logo)",
         required=False,
-        widget=forms.FileInput(attrs={"class": "form-control", "accept": "image/jpeg,image/jpg,image/png", }),
-        validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])],
+        widget=forms.FileInput(
+            attrs={
+                "class": "form-control",
+                "accept": "image/jpeg,image/jpg,image/png",
+            }
+        ),
+        validators=[FileExtensionValidator(allowed_extensions=["jpg", "jpeg", "png"])],
     )
-
 
     icon = forms.ImageField(  # Icon
         label="Icon",
         required=False,
-        widget=forms.FileInput(attrs={"class": "form-control", "accept": "image/jpeg,image/jpg,image/png", }),
-        validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])],
+        widget=forms.FileInput(
+            attrs={
+                "class": "form-control",
+                "accept": "image/jpeg,image/jpg,image/png",
+            }
+        ),
+        validators=[FileExtensionValidator(allowed_extensions=["jpg", "jpeg", "png"])],
     )
     # status = forms.BooleanField(
     #     required=False,
     #     label="Is Active",
     #     widget=forms.CheckboxInput(attrs={"class": "form-check-input"}),
     # )
-
-
-
-
-
-
 
     # Dynamically populate parent_id choices
     def __init__(self, *args, **kwargs):
@@ -946,6 +959,7 @@ class ProductImportForm(forms.Form):
             }
         ),
     )
+
     def clean_import_file(self):
         file = self.cleaned_data["import_file"]
 
@@ -971,6 +985,7 @@ class ZoneRatesImportForm(forms.Form):
             }
         ),
     )
+
     def clean_import_file(self):
         file = self.cleaned_data["import_file"]
 
@@ -996,6 +1011,7 @@ class PriceQuantityImportForm(forms.Form):
             }
         ),
     )
+
     def clean_import_file(self):
         file = self.cleaned_data["import_file"]
 
@@ -1018,7 +1034,7 @@ class BrandImportForm(forms.Form):
         widget=forms.FileInput(
             attrs={
                 "accept": ".csv,.xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv",
-                "class": "form-control"
+                "class": "form-control",
             }
         ),
     )
@@ -1128,68 +1144,82 @@ class RateByZoneForm(forms.Form):
 class EmailTemplateForm(forms.ModelForm):
     class Meta:
         model = EmailTemplate
-        fields = ['key', 'subject', 'body_text', 'body_html']
+        fields = ["key", "subject", "body_text", "body_html"]
         widgets = {
-            'body_text': forms.Textarea(attrs={'rows': 10, 'class': 'form-control'}),
-            'body_html': forms.Textarea(attrs={'rows': 100, 'class': 'form-control'}),
+            "body_text": forms.Textarea(attrs={"rows": 10, "class": "form-control"}),
+            "body_html": forms.Textarea(attrs={"rows": 100, "class": "form-control"}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Make key read-only on update (not on create)
         if self.instance and self.instance.pk:
-            self.fields['key'].disabled = True
+            self.fields["key"].disabled = True
 
 
 class EmailReceiverForm(forms.ModelForm):
     class Meta:
         model = EmailReceiver
-        fields = ['template', 'roles', 'users', 'emails']
+        fields = ["template", "roles", "users", "emails"]
         widgets = {
-            'template': forms.Select(attrs={'class': 'form-select'}),
-            'roles': forms.CheckboxSelectMultiple(),
-            'users': forms.CheckboxSelectMultiple(),
-            'emails': forms.Textarea(attrs={'rows': 3, 'class': 'form-control', 'placeholder': 'Comma-separated emails'}),
+            "template": forms.Select(attrs={"class": "form-select"}),
+            "roles": forms.CheckboxSelectMultiple(),
+            "users": forms.CheckboxSelectMultiple(),
+            "emails": forms.Textarea(
+                attrs={
+                    "rows": 3,
+                    "class": "form-control",
+                    "placeholder": "Comma-separated emails",
+                }
+            ),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Optionally filter users or roles if needed
-        self.fields['template'].empty_label = "Select Template"
+        self.fields["template"].empty_label = "Select Template"
 
 
 class EmailTriggerForm(forms.ModelForm):
     class Meta:
         model = EmailTriggers
-        fields = ['trigger', 'data']
+        fields = ["trigger", "data"]
         widgets = {
-            'trigger': forms.Select(attrs={'class': 'form-select'}),
-            'data': forms.Textarea(attrs={
-                'rows': 8,
-                'class': 'form-control',
-                'placeholder': '[{"type": "role", "value": "admin", "template_id": "1"}, ...]',
-            }),
+            "trigger": forms.Select(attrs={"class": "form-select"}),
+            "data": forms.Textarea(
+                attrs={
+                    "rows": 8,
+                    "class": "form-control",
+                    "placeholder": '[{"type": "role", "value": "admin", "template_id": "1"}, ...]',
+                }
+            ),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.instance and self.instance.pk:
-            self.fields['trigger'].disabled = True
+            self.fields["trigger"].disabled = True
+
 
 class DeliveryZoneForm(forms.Form):
     zone_code = forms.CharField(
         max_length=50,
-        widget=forms.Select(attrs={'class': 'form-select', "required": "required"}, choices=ZONE_CODE_CHOICES),
-        help_text="Select from existing zone codes or type a new one"
+        widget=forms.Select(
+            attrs={"class": "form-select", "required": "required"},
+            choices=ZONE_CODE_CHOICES,
+        ),
+        help_text="Select from existing zone codes or type a new one",
     )
     zone_name = forms.CharField(
         max_length=100,
-        widget=forms.Select(attrs={'class': 'form-select', "required": "required"}, choices=ZONE_NAME_CHOICES),
-        help_text="Select from existing zone names or type a new one"
+        widget=forms.Select(
+            attrs={"class": "form-select", "required": "required"},
+            choices=ZONE_NAME_CHOICES,
+        ),
+        help_text="Select from existing zone names or type a new one",
     )
     is_active = forms.BooleanField(
-        required=True,
-        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
+        required=True, widget=forms.CheckboxInput(attrs={"class": "form-check-input"})
     )
     uuid = forms.CharField(widget=forms.HiddenInput(), required=False)
 
@@ -1197,39 +1227,46 @@ class DeliveryZoneForm(forms.Form):
         super().__init__(*args, **kwargs)
         if is_edit:
             # For edit: make zone_code readonly
-            self.fields['zone_code'].widget.attrs['readonly'] = 'readonly'
-            self.fields['zone_code'].help_text = "Zone code cannot be changed after creation"
+            self.fields["zone_code"].widget.attrs["readonly"] = "readonly"
+            self.fields["zone_code"].help_text = (
+                "Zone code cannot be changed after creation"
+            )
         else:
             # For create: allow editing zone_code
-            self.fields['zone_code'].help_text = "Select from existing zone codes or type a new one"
+            self.fields["zone_code"].help_text = (
+                "Select from existing zone codes or type a new one"
+            )
 
 
 class PostcodeZoneForm(forms.Form):
     postcode = forms.CharField(
         max_length=10,
-        widget=forms.Select(attrs={'class': 'form-select', "required": "required"}, choices=POST_CODE_CHOICES),
-        help_text="e.g., 2000, 3000-3005"
+        widget=forms.Select(
+            attrs={"class": "form-select", "required": "required"},
+            choices=POST_CODE_CHOICES,
+        ),
+        help_text="e.g., 2000, 3000-3005",
     )
     zone_code = forms.ChoiceField(
         choices=[],  # Initially empty
-        widget=forms.Select(attrs={'class': 'form-select', "required": "required"})
+        widget=forms.Select(attrs={"class": "form-select", "required": "required"}),
     )
     is_active = forms.BooleanField(
         required=False,
         initial=True,
-        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
+        widget=forms.CheckboxInput(attrs={"class": "form-check-input"}),
     )
 
     # If you're editing, you might want to hide/show UUID
     uuid = forms.UUIDField(widget=forms.HiddenInput(), required=False)
 
     def __init__(self, *args, is_edit=False, **kwargs):
-        zone_choices = kwargs.pop('zone_choices', [])
+        zone_choices = kwargs.pop("zone_choices", [])
         super().__init__(*args, **kwargs)
-        self.fields['zone_code'].choices = zone_choices
+        self.fields["zone_code"].choices = zone_choices
         # if is_edit:
-            # self.fields['postcode'].widget.attrs['readonly'] = True  # Often postcode can't change
-            # self.fields['postcode'].help_text = "Postcode cannot be changed after creation"
+        # self.fields['postcode'].widget.attrs['readonly'] = True  # Often postcode can't change
+        # self.fields['postcode'].help_text = "Postcode cannot be changed after creation"
 
 
 def validate_rate(value):
@@ -1241,10 +1278,10 @@ def validate_rate(value):
     """
     if value == "NS":
         return value
-    
+
     # Regex to match positive number (integer or float)
-    number_pattern = r'^\d+(\.\d+)?$'
-    
+    number_pattern = r"^\d+(\.\d+)?$"
+
     # Check for single positive number
     if re.match(number_pattern, value):
         num = float(value)
@@ -1252,56 +1289,68 @@ def validate_rate(value):
             return value
         else:
             raise ValidationError("Must be a positive number (greater than 0).")
-    
-    raise ValidationError("Invalid input. Must be 'NS', a positive number (e.g., 2000 or 2000.5), or a range (e.g., 3000-3005 or 3000.0-3005.5).")
+
+    raise ValidationError(
+        "Invalid input. Must be 'NS', a positive number (e.g., 2000 or 2000.5), or a range (e.g., 3000-3005 or 3000.0-3005.5)."
+    )
 
 
 class ShippingRateByZoneForm(forms.Form):
     product_identifier = forms.CharField(
         max_length=100,
-        widget=forms.TextInput(attrs={'class': 'form-control',"required": "required"}),
-        help_text="e.g., 2000, 3000-3005"
+        widget=forms.TextInput(attrs={"class": "form-control", "required": "required"}),
+        help_text="e.g., 2000, 3000-3005",
     )
-    zone_code =  forms.ChoiceField(
+    zone_code = forms.ChoiceField(
         choices=[],  # Initially empty
-        widget=forms.Select(attrs={'class': 'form-select', "required": "required"})
+        widget=forms.Select(attrs={"class": "form-select", "required": "required"}),
     )
     is_active = forms.BooleanField(
         required=False,
         initial=True,
-        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
+        widget=forms.CheckboxInput(attrs={"class": "form-check-input"}),
     )
     rate = forms.CharField(
         max_length=10,
-        widget=forms.TextInput(attrs={'class': 'form-control','required': 'required'}),
+        widget=forms.TextInput(attrs={"class": "form-control", "required": "required"}),
         help_text="e.g., 2000, 3000-3005",
-        validators=[validate_rate]
+        validators=[validate_rate],
     )
     # If you're editing, you might want to hide/show UUID
     uuid = forms.CharField(widget=forms.HiddenInput(), required=False)
 
     def __init__(self, *args, is_edit=False, **kwargs):
-        zone_choices = kwargs.pop('zone_choices', [])
+        zone_choices = kwargs.pop("zone_choices", [])
         super().__init__(*args, **kwargs)
-        self.fields['zone_code'].choices = zone_choices
+        self.fields["zone_code"].choices = zone_choices
         if is_edit:
-            self.fields['product_identifier'].widget.attrs['readonly'] = True  # Often postcode can't change
-            self.fields['product_identifier'].help_text = "Product Identifier cannot be changed after creation"
+            self.fields["product_identifier"].widget.attrs[
+                "readonly"
+            ] = True  # Often postcode can't change
+            self.fields["product_identifier"].help_text = (
+                "Product Identifier cannot be changed after creation"
+            )
             # self.fields['zone_code'].widget.attrs['readonly'] = True  # Often postcode can't change
-            self.fields['zone_code'].disabled = True  # Disable the field to make it read-only
-            self.fields['zone_code'].required = False # Disabled fields are not sent, so validaton fails if required
-            self.fields['zone_code'].help_text = "Zone Code cannot be changed after creation"
+            self.fields["zone_code"].disabled = (
+                True  # Disable the field to make it read-only
+            )
+            self.fields["zone_code"].required = (
+                False  # Disabled fields are not sent, so validaton fails if required
+            )
+            self.fields["zone_code"].help_text = (
+                "Zone Code cannot be changed after creation"
+            )
 
 
 class WarehouseForm(forms.Form):
     name = forms.CharField(
         max_length=10,
-        widget=forms.TextInput(attrs={'class': 'form-control','required': 'required'}),
-        help_text="e.g., 2000, 3000-3005"
+        widget=forms.TextInput(attrs={"class": "form-control", "required": "required"}),
+        help_text="e.g., 2000, 3000-3005",
     )
     location = forms.CharField(
         max_length=50,
-        widget=forms.TextInput(attrs={'class': 'form-control','required': 'required'})
+        widget=forms.TextInput(attrs={"class": "form-control", "required": "required"}),
     )
     # is_active = forms.BooleanField(
     #     required=False,
@@ -1314,52 +1363,49 @@ class WarehouseForm(forms.Form):
     def __init__(self, *args, is_edit=False, **kwargs):
         super().__init__(*args, **kwargs)
         # if is_edit:
-            # self.fields['postcode'].widget.attrs['readonly'] = True  # Often postcode can't change
-            # self.fields['postcode'].help_text = "Postcode cannot be changed after creation"
+        # self.fields['postcode'].widget.attrs['readonly'] = True  # Often postcode can't change
+        # self.fields['postcode'].help_text = "Postcode cannot be changed after creation"
 
 
 class CouponForm(forms.Form):
     code = forms.CharField(
         max_length=50,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'required': 'required'}),
-        help_text="e.g., SUMMER150"
+        widget=forms.TextInput(attrs={"class": "form-control", "required": "required"}),
+        help_text="e.g., SUMMER150",
     )
     name = forms.CharField(
         max_length=100,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'required': 'required'}),
-        help_text="e.g., Summer Sale"
+        widget=forms.TextInput(attrs={"class": "form-control", "required": "required"}),
+        help_text="e.g., Summer Sale",
     )
     description = forms.CharField(
         max_length=500,
         required=False,
-        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
+        widget=forms.Textarea(attrs={"class": "form-control", "rows": 3}),
     )
     discount_type = forms.ChoiceField(
-        choices=[('percentage', 'Percentage'), ('fixed', 'Fixed Amount')],
-        widget=forms.Select(attrs={'class': 'form-select', 'required': 'required'})
+        choices=[("percentage", "Percentage"), ("fixed", "Fixed Amount")],
+        widget=forms.Select(attrs={"class": "form-select", "required": "required"}),
     )
     discount_value = forms.DecimalField(
         max_digits=10,
         decimal_places=2,
-        widget=forms.NumberInput(attrs={'class': 'form-control', 'required': 'required'})
+        widget=forms.NumberInput(
+            attrs={"class": "form-control", "required": "required"}
+        ),
     )
     max_discount_amount = forms.DecimalField(
         max_digits=10,
         decimal_places=2,
         required=False,
-        widget=forms.NumberInput(attrs={'class': 'form-control'})
+        widget=forms.NumberInput(attrs={"class": "form-control"}),
     )
     min_order_value = forms.DecimalField(
         max_digits=10,
         decimal_places=2,
         initial=0,
-        widget=forms.NumberInput(attrs={'class': 'form-control'})
+        widget=forms.NumberInput(attrs={"class": "form-control"}),
     )
-
-
-    
-    
-
 
     # Item selection fields (hidden, populated by JS modals)
     applicable_categories = forms.CharField(
@@ -1375,14 +1421,26 @@ class CouponForm(forms.Form):
         widget=forms.HiddenInput(),
     )
     start_date = forms.DateTimeField(
-        widget=forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local', 'required': 'required'})
+        widget=forms.DateTimeInput(
+            attrs={
+                "class": "form-control",
+                "type": "datetime-local",
+                "required": "required",
+            }
+        )
     )
     end_date = forms.DateTimeField(
-        widget=forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local', 'required': 'required'})
+        widget=forms.DateTimeInput(
+            attrs={
+                "class": "form-control",
+                "type": "datetime-local",
+                "required": "required",
+            }
+        )
     )
     status = forms.ChoiceField(
-        choices=[('active', 'Active'), ('inactive', 'Inactive'), ('draft', 'Draft')],
-        widget=forms.Select(attrs={'class': 'form-select', 'required': 'required'})
+        choices=[("active", "Active"), ("inactive", "Inactive"), ("draft", "Draft")],
+        widget=forms.Select(attrs={"class": "form-select", "required": "required"}),
     )
     # usage_limit = forms.IntegerField(
     #     min_value=0,
@@ -1394,12 +1452,12 @@ class CouponForm(forms.Form):
         required=False,
         label="Total Usage Limit",
         help_text="Total number of times this coupon can be used",
-        widget=forms.NumberInput(attrs={'class': 'form-control'})
+        widget=forms.NumberInput(attrs={"class": "form-control"}),
     )
     per_user_limit = forms.IntegerField(
         min_value=0,
         required=False,
-        widget=forms.NumberInput(attrs={'class': 'form-control'})
+        widget=forms.NumberInput(attrs={"class": "form-control"}),
     )
     uuid = forms.UUIDField(widget=forms.HiddenInput(), required=False)
 
@@ -1410,11 +1468,15 @@ class CouponForm(forms.Form):
 
         if discount_type == "percentage" and discount_value is not None:
             if discount_value <= 0 or discount_value > 100:
-                self.add_error("discount_value", "Percentage discount must be between 0 and 100.")
+                self.add_error(
+                    "discount_value", "Percentage discount must be between 0 and 100."
+                )
 
         elif discount_type == "fixed" and discount_value is not None:
             if discount_value <= 0:
-                self.add_error("discount_value", "Fixed discount value must be greater than 0.")
+                self.add_error(
+                    "discount_value", "Fixed discount value must be greater than 0."
+                )
 
         return cleaned_data
 
@@ -1422,7 +1484,8 @@ class CouponForm(forms.Form):
         # category_choices = kwargs.pop('category_choices', [])
         super().__init__(*args, **kwargs)
         # if category_choices:
-            # self.fields['applicable_categories'].choices = category_choices
+        # self.fields['applicable_categories'].choices = category_choices
+
 
 class PromotionCreateForm(forms.Form):
     def clean(self):
@@ -1434,7 +1497,7 @@ class PromotionCreateForm(forms.Form):
         min_q = cleaned_data.get("min_quantity")
         max_q = cleaned_data.get("max_quantity")
 
-        discount_type  = cleaned_data.get("discount_type")
+        discount_type = cleaned_data.get("discount_type")
         discount_value = cleaned_data.get("discount_value")
 
         # Date validation
@@ -1443,36 +1506,41 @@ class PromotionCreateForm(forms.Form):
 
         # Quantity validation
         if min_q and max_q and min_q > max_q:
-            raise forms.ValidationError("Min quantity cannot be greater than max quantity")
+            raise forms.ValidationError(
+                "Min quantity cannot be greater than max quantity"
+            )
 
         # Discount value validation
         if discount_type == "percentage" and discount_value is not None:
             if discount_value <= 0 or discount_value > 100:
-                self.add_error("discount_value", "Percentage discount must be between 0 and 100.")
+                self.add_error(
+                    "discount_value", "Percentage discount must be between 0 and 100."
+                )
         elif discount_type == "fixed" and discount_value is not None:
             if discount_value <= 0:
-                self.add_error("discount_value", "Fixed discount value must be greater than 0.")
+                self.add_error(
+                    "discount_value", "Fixed discount value must be greater than 0."
+                )
 
         return cleaned_data
 
     name = forms.CharField(
         max_length=255,
         required=True,
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+        widget=forms.TextInput(attrs={"class": "form-control"}),
     )
     description = forms.CharField(
         max_length=500,
         required=False,
-        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
+        widget=forms.Textarea(attrs={"class": "form-control", "rows": 3}),
     )
     discount_type = forms.ChoiceField(
-        choices=[('fixed', 'Fixed'), ('percentage', 'Percentage')],
+        choices=[("fixed", "Fixed"), ("percentage", "Percentage")],
         required=True,
-        widget=forms.Select(attrs={'class': 'form-select'})
+        widget=forms.Select(attrs={"class": "form-select"}),
     )
     discount_value = forms.DecimalField(
-        required=False,
-        widget=forms.NumberInput(attrs={'class': 'form-control'})
+        required=False, widget=forms.NumberInput(attrs={"class": "form-control"})
     )
 
     applicable_categories = forms.CharField(
@@ -1491,53 +1559,57 @@ class PromotionCreateForm(forms.Form):
     min_quantity = forms.IntegerField(
         required=False,
         initial=1,
-        widget=forms.NumberInput(attrs={'class': 'form-control'})
+        widget=forms.NumberInput(attrs={"class": "form-control"}),
     )
 
     max_quantity = forms.IntegerField(
         required=False,
         initial=1,
-        widget=forms.NumberInput(attrs={'class': 'form-control'})
+        widget=forms.NumberInput(attrs={"class": "form-control"}),
     )
 
     min_order_value = forms.DecimalField(
         required=False,
         initial=0,
-        widget=forms.NumberInput(attrs={'class': 'form-control'})
+        widget=forms.NumberInput(attrs={"class": "form-control"}),
     )
 
     usage_limit = forms.IntegerField(
         required=False,
         initial=1,
-        widget=forms.NumberInput(attrs={'class': 'form-control'})
+        widget=forms.NumberInput(attrs={"class": "form-control"}),
     )
 
     per_user_limit = forms.IntegerField(
         required=False,
         initial=1,
-        widget=forms.NumberInput(attrs={'class': 'form-control'})
+        widget=forms.NumberInput(attrs={"class": "form-control"}),
     )
 
     priority = forms.IntegerField(
         required=False,
         initial=1,
-        widget=forms.NumberInput(attrs={'class': 'form-control'})
+        widget=forms.NumberInput(attrs={"class": "form-control"}),
     )
 
     is_active = forms.BooleanField(
         required=False,
         initial=True,
-        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
+        widget=forms.CheckboxInput(attrs={"class": "form-check-input"}),
     )
 
     start_date = forms.DateTimeField(
         required=True,
-        widget=forms.DateTimeInput(attrs={'type': 'datetime-local','class':'form-control'})
+        widget=forms.DateTimeInput(
+            attrs={"type": "datetime-local", "class": "form-control"}
+        ),
     )
 
     end_date = forms.DateTimeField(
         required=True,
-        widget=forms.DateTimeInput(attrs={'type': 'datetime-local','class':'form-control'})
+        widget=forms.DateTimeInput(
+            attrs={"type": "datetime-local", "class": "form-control"}
+        ),
     )
 
 
@@ -1552,10 +1624,10 @@ class ImportPromotionsForm(forms.Form):
         widget=forms.FileInput(
             attrs={
                 "accept": ".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel",
-                "class": "form-control"
+                "class": "form-control",
             }
         ),
-        help_text="Upload Excel file (.xlsx or .xls). Maximum size: 10 MB"
+        help_text="Upload Excel file (.xlsx or .xls). Maximum size: 10 MB",
     )
 
 
@@ -1566,10 +1638,10 @@ class ImportCouponsForm(forms.Form):
         widget=forms.FileInput(
             attrs={
                 "accept": ".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel",
-                "class": "form-control"
+                "class": "form-control",
             }
         ),
-        help_text="Upload Excel file (.xlsx or .xls). Maximum size: 10 MB"
+        help_text="Upload Excel file (.xlsx or .xls). Maximum size: 10 MB",
     )
 
 
@@ -1588,33 +1660,43 @@ def validate_file_size(value):
 
 
 class ImportReviewsForm(forms.Form):
-    file = forms.FileField(required=True, validators=[validate_file_extension, validate_file_size])
+    file = forms.FileField(
+        required=True, validators=[validate_file_extension, validate_file_size]
+    )
 
 
 class MenuForm(forms.ModelForm):
     class Meta:
         model = Menu
-        fields = ['name', 'slug']
+        fields = ["name", "slug"]
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter menu name'}),
-            'slug': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter slug (optional)'}),
+            "name": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Enter menu name"}
+            ),
+            "slug": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Enter slug (optional)"}
+            ),
         }
 
 
 class MenuItemForm(forms.ModelForm):
     class Meta:
         model = MenuItem
-        fields = ['parent', 'title', 'url', 'order', 'status']
+        fields = ["parent", "title", "url", "order", "status"]
         widgets = {
-            'parent': forms.Select(attrs={'class': 'form-select'}),
-            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter title'}),
-            'url': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter URL'}),
-            'order': forms.NumberInput(attrs={'class': 'form-control'}),
-            'status': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            "parent": forms.Select(attrs={"class": "form-select"}),
+            "title": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Enter title"}
+            ),
+            "url": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Enter URL"}
+            ),
+            "order": forms.NumberInput(attrs={"class": "form-control"}),
+            "status": forms.CheckboxInput(attrs={"class": "form-check-input"}),
         }
 
     def __init__(self, *args, **kwargs):
-        menu = kwargs.pop('menu', None)
+        menu = kwargs.pop("menu", None)
         super().__init__(*args, **kwargs)
         if menu:
             self.instance.menu = menu
@@ -1622,17 +1704,19 @@ class MenuItemForm(forms.ModelForm):
             queryset = MenuItem.objects.filter(menu=menu)
             if self.instance.pk:
                 queryset = queryset.exclude(pk=self.instance.pk)
-            self.fields['parent'].queryset = queryset
+            self.fields["parent"].queryset = queryset
 
 
 class ProductHighlightForm(forms.Form):
     product_ids = forms.CharField(
         required=True,
-        widget=forms.SelectMultiple(attrs={'class': 'form-select select2Product', 'multiple': 'multiple'})
+        widget=forms.SelectMultiple(
+            attrs={"class": "form-select select2Product", "multiple": "multiple"}
+        ),
     )
-    banner_image = forms.ImageField(required=False, widget=forms.ClearableFileInput(attrs={'class': 'form-control'}))
-
-
+    banner_image = forms.ImageField(
+        required=False, widget=forms.ClearableFileInput(attrs={"class": "form-control"})
+    )
 
 
 class SocialMediaLinkForm(forms.ModelForm):
@@ -1641,7 +1725,9 @@ class SocialMediaLinkForm(forms.ModelForm):
         fields = ["platform", "url", "icon_class", "order", "is_active"]
         widgets = {
             "platform": forms.Select(attrs={"class": "form-select"}),
-            "url": forms.URLInput(attrs={"class": "form-control", "placeholder": "https://..."}),
+            "url": forms.URLInput(
+                attrs={"class": "form-control", "placeholder": "https://..."}
+            ),
             "icon_class": forms.TextInput(
                 attrs={
                     "class": "form-control",
@@ -1660,15 +1746,16 @@ class SocialMediaLinkForm(forms.ModelForm):
             "order": "Lower numbers appear first.",
         }
 
+
 class ReturnReasonForm(forms.Form):
     reason = forms.CharField(
         max_length=255,
         required=True,
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+        widget=forms.TextInput(attrs={"class": "form-control"}),
     )
 
     is_active = forms.BooleanField(
         required=False,
         initial=True,
-        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
+        widget=forms.CheckboxInput(attrs={"class": "form-check-input"}),
     )
