@@ -3,10 +3,10 @@
 <!-- Superadmin -->
 <ul class="list-unstyled components">
         <li class="mb-2 {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
-            <a href="{% url 'admin_dashboard' %}"><img src="{% static 'adminuser/images/sidebar/DashboardIcon.svg' %}"> Dashboard</a>
+            <a href="{% url 'admin_dashboard' %}"><img src="{% static 'adminuser/images/sidebar/DashboardIcon.svg' %}" alt=""> Dashboard</a>
         </li>
         <li class="mb-2 {% if request.resolver_match.url_name == 'vendor_list' %}active{% endif %}">
-            <a href="{% url 'vendor_list' %}"><img src="{% static 'adminuser/images/sidebar/VendorIcon.svg' %}"> Seller</a>
+            <a href="{% url 'vendor_list' %}"><img src="{% static 'adminuser/images/sidebar/VendorIcon.svg' %}" alt=""> Seller</a>
         </li>
         <!-- <li class="mb-2"><a href="{% url 'admin_dashboard' %}"><img src="{% static 'adminuser/images/sidebar/OrderManagementIcon.svg' %}"> Order Management</a></li> -->
         {% comment %} <li class="mb-2 {% if request.resolver_match.url_name == 'brand_list' %}active{% endif %}">
@@ -16,14 +16,14 @@
             <a href="{% url 'reviews_list' %}"><img src="{% static 'adminuser/images/sidebar/ReviewIcon.svg' %}"> Reviews</a>
         </li> {% endcomment %}
         <li class="mb-2 {% if request.resolver_match.url_name == 'import_export_list_tasks' %}active{% endif %}">
-            <a href="{% url 'import_export_list_tasks' %}"><img src="{% static 'adminuser/images/sidebar/brands.svg' %}"> Import/Export</a>
+            <a href="{% url 'import_export_list_tasks' %}"><img src="{% static 'adminuser/images/sidebar/brands.svg' %}" alt=""> Import/Export</a>
         </li>
         {% comment %} <li class="mb-2 {% if request.resolver_match.url_name == 'category_list' %}active{% endif %}">
             <a href="{% url 'category_list' %}"><img src="{% static 'adminuser/images/sidebar/CategoriesIcon.svg' %}"> Categories</a>
         </li> {% endcomment %}
 
         <li class="mb-2 {% if request.resolver_match.url_name == 'activity_logs' %}active{% endif %}">
-            <a href="{% url 'activity_logs' %}"><img src="{% static 'adminuser/images/sidebar/ActivityIcon.svg' %}"> Activity Logs</a>
+            <a href="{% url 'activity_logs' %}"><img src="{% static 'adminuser/images/sidebar/ActivityIcon.svg' %}" alt=""> Activity Logs</a>
         </li>
 
 
@@ -35,7 +35,7 @@
                aria-expanded="{% if request.resolver_match.url_name in 'product_list,product_add,product_edit,category_list,category_add,category_edit,brand_list,brand_add,brand_edit,bestseller_list,clearance_list,new_releases_list,hot_deals_list,popular_list,todays_deals_list,whats_on_sale_list,trending_deals_list,top_rated_list' %}true{% else %}false{% endif %}"
                aria-controls="productManagementDropdown">
                 <span>
-                    <img src="{% static 'adminuser/images/sidebar/ProductIcon.svg' %}">
+                    <img src="{% static 'adminuser/images/sidebar/ProductIcon.svg' %}" alt="">
                     Product Management
                 </span>
                 <i class="bi bi-chevron-down"></i>
@@ -217,7 +217,7 @@
                aria-expanded="{% if request.resolver_match.url_name in 'order_list' %}true{% else %}false{% endif %}"
                aria-controls="orderManagementDropdown">
                 <span>
-                    <img src="{% static 'adminuser/images/sidebar/OrderIcon.svg' %}">
+                    <img src="{% static 'adminuser/images/sidebar/OrderIcon.svg' %}" alt="">
                     Order Management
                 </span>
                 <i class="bi bi-chevron-down"></i>
@@ -245,7 +245,7 @@
         </li>
 
         <li class="mb-2">
-            <a href="{% url 'logout' %}"><img src="{% static 'adminuser/images/sidebar/LogoutIcon.svg' %}"> Logout</a>
+            <a href="{% url 'logout' %}"><img src="{% static 'adminuser/images/sidebar/LogoutIcon.svg' %}" alt=""> Logout</a>
         </li>
 </ul>
 <!-- Superadmin --> {% endif %}

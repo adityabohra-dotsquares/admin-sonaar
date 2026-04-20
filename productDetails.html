@@ -11,7 +11,7 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="page-title mt-4">Product Details</h5>
                 <div class="gap-2">
-                    <a href="https://shopperbeats.com.au/product/{{ response.unique_code }}" class="btn btn-primary me-2" target="_blank">Preview</a>
+                    <a href="https://shopperbeats.com.au/product/{{ response.unique_code }}" class="btn btn-primary me-2" target="_blank" rel="noopener noreferrer">Preview</a>
                     <a href="{% url 'product_edit' response.id %}" class="red-btn">Edit Product</a>
                 </div>
             </div>
@@ -631,7 +631,7 @@
 
                                                         {% for img in vimages %}
                                                             <!-- <small class="text-muted">—</small> -->
-                                                            <img src="{{ img }}" style="width: 80px;height: 80px;"/>
+                                                            <img src="{{ img }}" alt="Variant image" style="width: 80px;height: 80px;"/>
 
                                                 
                                                         {% endfor %}

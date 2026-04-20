@@ -103,7 +103,7 @@
           
           {% if vendor.website %}
             <div>
-              <a href="{{ vendor.website }}" target="_blank" rel="noopener">
+              <a href="{{ vendor.website }}" target="_blank" rel="noopener noreferrer">
                 {{ vendor.website }}
               </a>
             </div>
@@ -154,7 +154,7 @@
             <strong>Lng:</strong> {{ vendor.longitude }}<br>
 
             <a href="https://www.google.com/maps/search/?api=1&query={{ vendor.latitude }},{{ vendor.longitude }}"
-               target="_blank" class="mt-1 d-inline-block">
+               target="_blank" rel="noopener noreferrer" class="mt-1 d-inline-block">
               <i class="bi bi-geo-alt"></i> Open in Google Maps
             </a>
           </div>

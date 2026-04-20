@@ -189,7 +189,7 @@
                             <td>${% if data.variants %}{{ data.variants|get_price_range }}{% else %}{{ data.price }}{% endif %}</td>
                             <td class="action-icon">
                                 <div class="action-wrapper">
-                                    <a href="https://shopperbeats.com.au/product/{{ data.unique_code }}" target="_blank"><i class="bi bi-eye"></i></a>
+                                    <a href="https://shopperbeats.com.au/product/{{ data.unique_code }}" target="_blank" rel="noopener noreferrer" aria-label="View product page"><i class="bi bi-eye"></i></a>
                                     <a href="{% url 'product_edit' data.id %}"><i class="bi bi-pencil"></i></a>
                                     <a href="javascript:void(0);"
                                        onclick="if(confirm('Are you sure you want to delete this product?')) submitSingleAction('{% url 'product_delete' data.id %}')">
