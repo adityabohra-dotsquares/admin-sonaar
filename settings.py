@@ -25,11 +25,7 @@ SITE_ID = 1
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
 
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://admin-uat.shopperbeats.com.au",
-    "http://admin-uat.shopperbeats.com.au",
-]
-
+CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
 # Application definition
 # if not DEBUG:
 USE_X_FORWARDED_HOST = True
@@ -209,9 +205,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"  # or "optional"
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-SITES_FALLBACK = (
-    "http://shopper-beats-frontend-877627218975.australia-southeast2.run.app"
-)
+SITES_FALLBACK = os.getenv("SITES_FALLBACK", "").split(",")
 # EMAIL_BACKEND
 # EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"  # dev
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -230,7 +224,7 @@ DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")
 DEFAULT_FROM_EMAIL = "noreply@shopperbeats.com"
 STAKEHOLDER_EMAIL = env("STAKEHOLDER_EMAIL", default="cs@shopperbeats.com.au")
 
-FRONTEND_URL = "http://192.168.9.36:3000/"
+FRONTEND_URL = os.getenv("FRONTEND_URL", "")
 
 ACCOUNT_ADAPTER = "adminuser.custom_adapters.DatabaseEmailAdapter"
 # ACCOUNT_ADAPTER = "shop.adapters.MyAccountAdapter"
@@ -289,9 +283,7 @@ MESSAGE_TAGS = {
 # Celery Configuration
 # =====================================
 CELERY_BROKER_URL = env("CELERY_BROKER_URL")
-CELERY_RESULT_BACKEND = env(
-    "CELERY_RESULT_BACKEND", default="redis://34.129.99.99:6399/0"
-)
+CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND")
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
