@@ -88,13 +88,6 @@ fastapi_app.add_middleware(
     allowed_hosts=["*"],
 )
 
-fastapi_app.add_middleware(
-    CORSMiddleware,
-    allow_origins=os.getenv("CORSFASTAPI", "*").split(","),
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 from django.db import close_old_connections
 
@@ -112,6 +105,13 @@ class DjangoDBMiddleware:
 
 
 fastapi_app.add_middleware(DjangoDBMiddleware)
+fastapi_app.add_middleware(
+    CORSMiddleware,
+    allow_origins=os.getenv("CORSFASTAPI", "*").split(","),
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # app.add_middleware(AuditIOMiddleware)
 
 
