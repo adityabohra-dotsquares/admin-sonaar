@@ -21,9 +21,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi_auth.AuditMiddleware import AuditIOMiddleware
 
 
-
-
-
 from starlette.responses import RedirectResponse
 from starlette.types import ASGIApp, Scope, Receive, Send
 
@@ -43,6 +40,7 @@ class SilentRequestAbortedMiddleware:
         except Exception as e:
             # Re-raise other exceptions
             raise e
+
 
 class AdminDomainMiddleware:
     def __init__(self, app: ASGIApp):
@@ -73,6 +71,7 @@ class AdminDomainMiddleware:
         # Otherwise continue FastAPI
         await self.app(scope, receive, send)
 
+
 fastapi_app = FastAPI(title="Customer AUTH API")
 
 import os
@@ -80,10 +79,7 @@ import os
 SERVER_MODE = os.getenv("SERVER_MODE", "production")
 
 if SERVER_MODE == "development":
-    fastapi_app.mount(
-        "/_django",
-        SilentRequestAbortedMiddleware(django_asgi_app)
-    )
+    fastapi_app.mount("/_django", SilentRequestAbortedMiddleware(django_asgi_app))
     fastapi_app.mount("/static", StaticFiles(directory="staticfiles"), name="static")
 
 app = AdminDomainMiddleware(fastapi_app)
@@ -94,21 +90,14 @@ fastapi_app.add_middleware(
 
 fastapi_app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://192.168.9.36:3000",
-        "https://shopper-beats-frontend-877627218975.australia-southeast2.run.app",
-        "https://admin-uat.shopperbeats.com.au",
-        "http://shopperbeats.com.au",
-        "https://shopperbeats.com.au",
-        "http://192.168.9.189:8001",
-    ],
+    allow_origins=os.getenv("CORSFASTAPI", "*").split(","),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 from django.db import close_old_connections
+
 
 class DjangoDBMiddleware:
     def __init__(self, app):
@@ -121,6 +110,7 @@ class DjangoDBMiddleware:
         finally:
             close_old_connections()
 
+
 fastapi_app.add_middleware(DjangoDBMiddleware)
 # app.add_middleware(AuditIOMiddleware)
 
@@ -130,15 +120,18 @@ def healthCheck():
     return {"response": "System Working Properly"}
 
 
-
 from .apis.v1.faq import router as FAQRouter
 
 fastapi_app.include_router(authRouter, prefix="/api/v1/users", tags=["auth"])
 fastapi_app.include_router(AddressRouter, prefix="/api/v1/users", tags=["address"])
 fastapi_app.include_router(ProfileRouter, prefix="/api/v1/users", tags=["address"])
-fastapi_app.include_router(MarketingRouter, prefix="/api/v1/marketing", tags=["marketing"])
+fastapi_app.include_router(
+    MarketingRouter, prefix="/api/v1/marketing", tags=["marketing"]
+)
 fastapi_app.include_router(MenuRouter, prefix="/api/v1/menu", tags=["menu"])
-fastapi_app.include_router(SocialMediaRouter, prefix="/api/v1/social-media", tags=["social-media"])
+fastapi_app.include_router(
+    SocialMediaRouter, prefix="/api/v1/social-media", tags=["social-media"]
+)
 fastapi_app.include_router(FAQRouter, prefix="/api/v1/faqs", tags=["faqs"])
 
 from django.core.exceptions import RequestAborted
@@ -147,4 +140,3 @@ from starlette.types import ASGIApp, Receive, Scope, Send
 # Apply it when mounting
 # fastapi_app.mount("/admin", SilentRequestAbortedMiddleware(django_asgi_app))
 # app.mount("/", django_asgi_app)
-
