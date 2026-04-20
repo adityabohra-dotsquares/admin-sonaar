@@ -1,7 +1,7 @@
 # app/audit_logger.py
 from loguru import logger
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
 
 # Ensure log directory exists
 Path("logs").mkdir(exist_ok=True)
@@ -28,7 +28,7 @@ def audit_log(
 ):
     """Write a JSON audit log entry."""
     entry = {
-        "timestamp": datetime.utcnow().isoformat() + "Z",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "user_id": user_id,
         "action": action,
         "object_type": object_type,

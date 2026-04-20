@@ -55,7 +55,6 @@ class AdminDomainMiddleware:
             if host == ADMIN_DOMAIN:
                 await django_asgi_app(scope, receive, send)
                 return
-                path = scope.get("path", "")
 
                 # # Redirect root `/` → `/admin`
                 # if path == "/" or path == "":
